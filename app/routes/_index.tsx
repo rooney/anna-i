@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import { translations, Language } from '../translations';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "ANNA-i" },
   ];
 };
 
@@ -27,19 +26,24 @@ export default function Index() {
     [lang, setLang] = useState<Language>("jp"),
     [chats, setChats] = useState<Chat[]>([]);
 
+  useEffect(() => {
+    document.getElementById('greeting')?.classList.add('popup');
+    document.getElementById('translator')?.classList.add('popup');
+  }, []);
+
   return (
     <>
       <header>
         <img id="assistant" src="/images/penguin.png"/>
         <section>
-          <div id="greeting" className="bubble jp">
+          <div id="greeting" className="bubble jp shrink">
             {translations.jp.greeting}
           </div>
         </section>
       </header>
       <main>
         <section id="translate">
-          <a id="translator" className="bubble en user" 
+          <a id="translator" className="bubble en user shrink" 
             style={{display: chats.length ? 'none' : 'block'}}
             onClick={(e) => {
               e.preventDefault();
@@ -47,7 +51,7 @@ export default function Index() {
               document.getElementById('submit')?.click();
             }}>Translate?</a>
         </section>
-        <section id="discourse">
+        <section className="discourse">
           {chats.map((chat, index) => 
             typeof chat.what === "string" && (chat.what.toLowerCase() === "translate") ? (
               <div className="lang-switch" key={index}>
@@ -61,7 +65,7 @@ export default function Index() {
                     setLang(newLang);
                     setChats([...chats, 
                       {who: 'anna', what: translations[newLang].greeting, lang: newLang}]);
-                    setTimeout(scrollIntoLatest, 100);
+                    setTimeout(scrollIntoLatest, 1);
                   }
                 }}>🇯🇵</a>
               </div>
@@ -89,7 +93,7 @@ export default function Index() {
                 {who: 'user', what: input.value, lang: lang},
                 {who: 'anna', what: translations[lang].notFound, lang: lang}]);
             }
-            setTimeout(scrollIntoLatest, 100);
+            setTimeout(scrollIntoLatest, 1);
             input.value = '';
           }}>
           <input id="search-box" type="text" autoComplete="off" placeholder={`${translations[lang].searchHint}`}/>

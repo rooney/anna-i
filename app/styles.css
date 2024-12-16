@@ -1,117 +1,103 @@
+:root {
+  --bubble-radius: 25px;
+}
+
 html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow-x: hidden;
+  @apply w-full h-full m-0 overflow-x-hidden;
 }
 body {
   background-image: url("/images/bg.jpg");
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  @apply bg-cover bg-center flex flex-col justify-around;
   @media (min-width:500px) {
-    justify-content: space-evenly;
+    justify-content: space-evenly;;
   }
 }
-#discourse {
-  width: 100%;
-  max-width: 625px;
-  margin: 0 auto;
-}
 header {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 625px;
-  display: flex;
-  flex-wrap: wrap-reverse;
+  @apply discourse flex flex-wrap-reverse;
 }
 #greeting {
-  border-bottom-left-radius: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  @apply white-bubble rounded-bl-none scale0 origin-bottom-left;
 }
 #assistant {
   width: 175px;
+  height: 263px;
   margin-left: 15px;
   margin-top: 10px;
 }
+.discourse {
+  @apply w-full mx-auto;
+  max-width: 625px;
+}
 .bubble {
-  border-radius: 25px;
-  width: fit-content;
+  @apply w-fit;
+  border-radius: var(--bubble-radius);
   margin: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   &.anna {
-    border-top-left-radius: 0;
-    background-color: rgba(255, 255, 255, 0.8);
+    @apply white-bubble popup rounded-tl-none scale0 origin-top-left;
   }
   &.user {
-    border-bottom-right-radius: 0;
-    background-color: rgba(124, 252, 0, 0.8);
-    margin-left: auto;
+    @apply green-bubble rounded-br-none ml-auto;
   }
-  &.jp {
-    font-size: 16pt;
-    padding: 10px 15px;
+  &.translate {
+    @apply green-bubble rounded-br-none;
   }
   &.en {
     font-size: 14pt;
     padding: 12px 17px;
   }
-  &.translate {
-    border-bottom-right-radius: 0;
-    background-color: rgba(124, 252, 0, 0.8);
+  &.jp {
+    font-size: 16pt;
+    padding: 10px 15px;
   }
 }
+.white-bubble {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.green-bubble {
+  background-color: rgba(124, 252, 0, 0.8);
+}
 #translate {
-  margin: auto;
-  width: 100%;
+  @apply m-auto w-full;
   max-width: 610px;
 }
 #translator {
-  border-bottom-right-radius: 25px;
-  background-color: white;
+  border-bottom-right-radius: var(--bubble-radius);
   border: 1px dashed black;
   font-size: 12pt;
-  color: royalblue;
-  text-decoration:  underline;
-  cursor: pointer;
+  animation-delay: .5s;
+  animation-duration: .2s;
+  @apply text-blue-500 bg-white underline cursor-pointer scale0;
 }
 .lang-switch {
-  display: flex;
-  flex-direction: row-reverse;
+  @apply flex flex-row-reverse;
 }
 .flag {
+  @apply bg-white mr-0 cursor-pointer;
   border-radius: 16px;
-  background-color: white;
   border: 1px dashed black;
   font-size: 20pt;
   padding: 5px 10px 0;
-  margin-right: 0;
-  cursor: pointer;
 }
 form {
-  display: flex;
+  @apply flex sticky;
   max-width: 600px;
   margin: 10px auto;
   padding: 0 10px;
-  position: sticky;
   bottom: 10px;
 }
 #search-box {
-  flex-grow: 1;
-  min-width: 0;
+  @apply flex-grow min-w-0;
   font-size: 13pt;
   border-radius: 50px;
   border: 1px solid #aaa;
   padding: 10px 68px 9px 40px;
 }
 .material-symbols-outlined {
+  @apply absolute cursor-pointer;
   font-size: 20pt;
-  position: absolute;
-  cursor: pointer;
   &.search {
-    cursor: default;
+    @apply cursor-default;
     top: 8px;
     left: 20px;
   }
@@ -125,14 +111,22 @@ form {
   }
 }
 #submit {
-  display: none;
+  @apply hidden;
 }
-@keyframes pop {
+.popup {
+  animation: popup .35s ease-out forwards;
+}
+@keyframes popup {
   0% {
-    transform: scale(0);
+    @apply scale0;
   }
   100% {
-    transform: scale(1);
+    @apply scale1;
   }
 }
-
+.scale0 {
+  transform: scale(0);
+}
+.scale1 {
+  transform: scale(1);
+}
