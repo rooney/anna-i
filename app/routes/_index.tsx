@@ -1,4 +1,6 @@
-import type { MetaFunction } from "@remix-run/node";
+import { useState } from 'react';
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { translations, Language } from '../translations';
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,49 +9,97 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+type Chat = {
+  who: string;
+  what: string | JSX.Element;
+  lang: Language;
+};
+
+function scrollIntoLatest() {
+  const lastChat = document.getElementById('discourse')?.lastElementChild;
+  if (lastChat) {
+    lastChat.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
 export default function Index() {
+  const
+    [lang, setLang] = useState<Language>("jp"),
+    [chats, setChats] = useState<Chat[]>([]);
+
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="flex flex-col items-center gap-16">
-        <header className="flex flex-col items-center gap-9">
-          <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Welcome to <span className="sr-only">Remix</span>
-          </h1>
-          <div className="h-[144px] w-[434px]">
-            <img
-              src="/logo-light.png"
-              alt="Remix"
-              className="block w-full dark:hidden"
-            />
-            <img
-              src="/logo-dark.png"
-              alt="Remix"
-              className="hidden w-full dark:block"
-            />
+    <>
+      <header>
+        <img id="assistant" src="/images/penguin.png"/>
+        <section>
+          <div id="greeting" className="bubble jp">
+            {translations.jp.greeting}
           </div>
-        </header>
-        <nav className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
-          <p className="leading-6 text-gray-700 dark:text-gray-200">
-            What&apos;s next?
-          </p>
-          <ul>
-            {resources.map(({ href, text, icon }) => (
-              <li key={href}>
-                <a
-                  className="group flex items-center gap-3 self-stretch p-3 leading-normal text-blue-700 hover:underline dark:text-blue-500"
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {icon}
-                  {text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    </div>
+        </section>
+      </header>
+      <main>
+        <section id="translate">
+          <a id="translator" className="bubble en user" 
+            style={{display: chats.length ? 'none' : 'block'}}
+            onClick={(e) => {
+              e.preventDefault();
+              (document.getElementById('search-box') as HTMLInputElement).value = "Translate";
+              document.getElementById('submit')?.click();
+            }}>Translate?</a>
+        </section>
+        <section id="discourse">
+          {chats.map((chat, index) => 
+            typeof chat.what === "string" && (chat.what.toLowerCase() === "translate") ? (
+              <div className="lang-switch" key={index}>
+                <div className="bubble en translate">{chat.what}</div>
+                <a className="bubble flag" lang="jp" onClick={(e) => {
+                  const
+                    target = e.target as HTMLElement,
+                    newLang = target.getAttribute('lang') as Language;
+                  target.parentElement?.removeChild(target);
+                  if (lang !== newLang) {
+                    setLang(newLang);
+                    setChats([...chats, 
+                      {who: 'anna', what: translations[newLang].greeting, lang: newLang}]);
+                    setTimeout(scrollIntoLatest, 100);
+                  }
+                }}>🇯🇵</a>
+              </div>
+            ) : (
+              <div className={`bubble ${chat.lang} ${chat.who}`} key={index}>
+                {chat.what}
+              </div>
+            )
+          )}
+        </section>
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            const input = document.getElementById('search-box') as HTMLInputElement;
+            if (!input.value.length) {
+              return;
+            }
+            if (input.value.toLowerCase() === "translate") {
+              setLang('en');
+              setChats([...chats, 
+                {who: 'user', what: input.value, lang: 'en'}, 
+                {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
+            }
+            else {
+              setChats([...chats, 
+                {who: 'user', what: input.value, lang: lang},
+                {who: 'anna', what: translations[lang].notFound, lang: lang}]);
+            }
+            setTimeout(scrollIntoLatest, 100);
+            input.value = '';
+          }}>
+          <input id="search-box" type="text" autoComplete="off" placeholder={`${translations[lang].searchHint}`}/>
+          <span className="material-symbols-outlined search">search</span>
+          <span className="material-symbols-outlined mic">mic</span>
+          <span className="material-symbols-outlined photo-camera">photo_camera</span>
+          <input type="submit" id="submit"/>
+        </form>
+      </main>
+    </>
   );
 }
 
