@@ -1,0 +1,115 @@
+@tailwind utilities;
+
+:root {
+  --bubble-radius: 25px;
+  --max-chats-width: 625px;
+}
+
+html, body {
+  @apply w-full h-full m-0 overflow-x-hidden;
+}
+body {
+  @apply bg-cover bg-center flex flex-col justify-around;
+  background-image: url("/images/bg.jpg");
+  @media (min-width:500px) {
+    justify-content: space-evenly;;
+  }
+}
+header {
+  @apply w-full mx-auto max-w-[var(--max-chats-width)] flex flex-wrap-reverse;
+}
+#discourse {
+  @apply w-full mx-auto max-w-[var(--max-chats-width)];
+}
+#greeting {
+  @apply --white-bubble rounded-bl-none scale0 origin-bottom-left;
+}
+#assistant {
+  @apply w-[175px] h-[263px] ml-[15px] mt-[10px];
+}
+.--white-bubble {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.--green-bubble {
+  background-color: rgba(124, 252, 0, 0.8);
+}
+.bubble {
+  @apply w-fit m-[10px] rounded-[var(--bubble-radius)];
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  &.anna {
+    @apply --white-bubble popup rounded-tl-none scale0 origin-top-left;
+  }
+  &.user {
+    @apply --green-bubble rounded-br-none ml-auto;
+  }
+  &.en {
+    @apply text-[14pt] p-[12px_17px];
+  }
+  &.jp {
+    @apply text-[16pt] p-[10px_15px];
+  }
+  &.translate {
+    @apply --green-bubble rounded-br-none mb-0;
+  }
+}
+.translate-offer {
+  @apply m-auto w-full max-w-[calc(var(--max-chats-width)-15px)];
+}
+#translate-offer {
+  @apply border border-dashed border-black rounded-br-[var(--bubble-radius)]
+    text-[12pt] text-blue-500 bg-white underline cursor-pointer scale0;
+  animation-delay: .5s;
+  animation-duration: .2s;
+}
+.lang-switch {
+  @apply flex flex-row-reverse;
+}
+.flag {
+  @apply text-[20pt] bg-white cursor-pointer p-[5px_10px_0] mr-0 mb-0
+    border border-dashed rounded-[16px];
+}
+form {
+  @apply flex sticky max-w-[600px] m-[15px_auto_0] p-[0_5px] bottom-[5px];
+}
+#search-box {
+  @apply flex-grow min-w-0;
+}
+#search-box, #camera-box {
+  @apply border border-gray-500 rounded-[25px] text-[13pt] p-[10px_68px_9px_35px];
+}
+.material-symbols-outlined {
+  @apply absolute cursor-pointer;
+  &.search {
+    @apply top-[8px] left-[13px] text-[20pt] cursor-default;
+  }
+  &.photo-camera {
+    @apply top-[8px] right-[50px] text-[20pt] border-solid border-gray-400 p-[0_4px];
+    border-width: 0 1px;
+  }
+  &.mic {
+    @apply top-[7px] right-[10px] text-[24pt];
+  }
+  &.send {
+    @apply top-[5px] right-[10px] text-[24pt];
+  }
+}
+#submit {
+  @apply hidden;
+}
+.popup {
+  animation: popup .35s ease-out forwards;
+}
+@keyframes popup {
+  0% {
+    @apply scale0;
+  }
+  100% {
+    @apply scale1;
+  }
+}
+.scale0 {
+  transform: scale(0);
+}
+.scale1 {
+  transform: scale(1);
+}

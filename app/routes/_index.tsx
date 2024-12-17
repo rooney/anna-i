@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { translations, Language } from '../translations';
 
 export const meta: MetaFunction = () => {
@@ -14,6 +14,14 @@ type Chat = {
   lang: Language;
 };
 
+function focusOnSearch() {
+  document.getElementById('search-box')?.focus();
+}
+
+function submit() {
+  document.getElementById('submit')?.click();
+}
+
 function scrollIntoLatest() {
   const lastChat = document.getElementById('discourse')?.lastElementChild;
   if (lastChat) {
@@ -21,23 +29,15 @@ function scrollIntoLatest() {
   }
 }
 
-function isAtBottom() {
-  return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
-}
-function adjustToKeyboard() {
-  if (isAtBottom())
-    scrollIntoLatest();
-}
-
-
 export default function Index() {
   const
     [lang, setLang] = useState<Language>("jp"),
-    [chats, setChats] = useState<Chat[]>([]);
-
+    [chats, setChats] = useState<Chat[]>([]),
+    [searchTerm, setSearchTerm] = useState<string>("");
+   
   useEffect(() => {
     document.getElementById('greeting')?.classList.add('popup');
-    document.getElementById('translator')?.classList.add('popup');
+    document.getElementById('translate-offer')?.classList.add('popup');
   }, []);
 
   return (
@@ -51,13 +51,12 @@ export default function Index() {
         </section>
       </header>
       <main>
-        <section id="translate">
-          <a id="translator" className="bubble en user" 
+        <section className="translate-offer">
+          <a id="translate-offer" className="bubble en user" 
             style={{display: chats.length ? 'none' : 'block'}}
             onClick={(e) => {
-              e.preventDefault();
-              (document.getElementById('search-box') as HTMLInputElement).value = "Translate";
-              document.getElementById('submit')?.click();
+              setSearchTerm('Translate');
+              setTimeout(submit, 1);
             }}>Translate?</a>
         </section>
         <section id="discourse">
@@ -78,7 +77,7 @@ export default function Index() {
                       scrollIntoLatest();
                       setTimeout(scrollIntoLatest, 1);
                     }, 1);
-                    document.getElementById('search-box')?.focus();
+                    focusOnSearch();
                   }
                 }}>🇯🇵</a>
               </div>
@@ -90,29 +89,31 @@ export default function Index() {
           )}
         </section>
         <form onSubmit={(e) => {
-            e.preventDefault();
-            const input = document.getElementById('search-box') as HTMLInputElement;
-            if (!input.value.length) {
-              return;
-            }
-            if (input.value.toLowerCase() === "translate") {
-              setLang('en');
-              setChats([...chats, 
-                {who: 'user', what: input.value, lang: 'en'}, 
-                {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
-            }
-            else {
-              setChats([...chats, 
-                {who: 'user', what: input.value, lang: lang},
-                {who: 'anna', what: translations[lang].notFound, lang: lang}]);
-            }
-            setTimeout(scrollIntoLatest, 1);
-            input.value = '';
-          }}>
-          <input type="text" id="search-box" autoComplete="off" placeholder={`${translations[lang].searchHint}`}/>
-          <span className="material-symbols-outlined search">search</span>
-          <span className="material-symbols-outlined mic">mic</span>
-          <span className="material-symbols-outlined photo-camera">photo_camera</span>
+          e.preventDefault();
+          if (!searchTerm) {
+            return;
+          }
+          if (searchTerm.toLowerCase() === "translate") {
+            setLang('en');
+            setChats([...chats, 
+              {who: 'user', what: searchTerm, lang: 'en'}, 
+              {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
+          }
+          else {
+            setChats([...chats, 
+              {who: 'user', what: searchTerm, lang: lang},
+              {who: 'anna', what: translations[lang].notFound, lang: lang}]);
+          }
+          setTimeout(scrollIntoLatest, 1);
+          setSearchTerm('');
+        }}>
+          <input type="text" id="search-box" autoComplete="off" value={searchTerm}
+            onInput={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
+            placeholder={`${translations[lang].searchHint}`}/>
+          <span className="material-symbols-outlined search" onClick={focusOnSearch}>search</span>
+          <span className={searchTerm ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>send</span>
+          <span className={searchTerm ? 'hidden' : 'material-symbols-outlined mic'}>mic</span>
+          <span className={searchTerm ? 'hidden' : 'material-symbols-outlined photo-camera'}>photo_camera</span>
           <input type="submit" id="submit"/>
         </form>
       </main>
