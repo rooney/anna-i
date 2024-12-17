@@ -1,5 +1,6 @@
 :root {
   --bubble-radius: 25px;
+  --max-chats-width: 625px;
 }
 
 html, body {
@@ -13,7 +14,12 @@ body {
   }
 }
 header {
-  @apply discourse flex flex-wrap-reverse;
+  @apply w-full mx-auto flex flex-wrap-reverse;
+  max-width: var(--max-chats-width);
+}
+#discourse {
+  @apply w-full mx-auto;
+  max-width: var(--max-chats-width);
 }
 #greeting {
   @apply white-bubble rounded-bl-none scale0 origin-bottom-left;
@@ -23,10 +29,6 @@ header {
   height: 263px;
   margin-left: 15px;
   margin-top: 10px;
-}
-.discourse {
-  @apply w-full mx-auto;
-  max-width: 625px;
 }
 .bubble {
   @apply w-fit;
@@ -59,7 +61,7 @@ header {
 }
 #translate {
   @apply m-auto w-full;
-  max-width: 610px;
+  max-width: calc(var(--max-chats-width) - 15px);
 }
 #translator {
   border-bottom-right-radius: var(--bubble-radius);
