@@ -38,6 +38,28 @@ export default function Index() {
   useEffect(() => {
     document.getElementById('greeting')?.classList.add('popup');
     document.getElementById('translate-offer')?.classList.add('popup');
+
+    const observer = new MutationObserver(() => {
+      if (document.body.scrollHeight > document.body.clientHeight) {
+        if (document.body.clientWidth >= 725) {
+          const
+            assistant = document.getElementById('assistant'),
+            shift2 = document.getElementById('shift-2');
+          assistant!.style.visibility = 'hidden';
+          shift2!.classList.remove('hidden');
+
+          document.body.addEventListener('scroll', () => {
+            if (document.body.scrollTop > 250) {
+              shift2?.classList.add('peek');
+            } else {
+              shift2?.classList.remove('peek');
+            }
+          });
+        }
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.getElementById('discourse')!, {childList: true})
   }, []);
 
   return (
@@ -50,6 +72,7 @@ export default function Index() {
           </div>
         </section>
       </header>
+      <img id="shift-2" className="hidden" src="/images/penguin.png"/>
       <main>
         <section className="translate-offer">
           <a id="translate-offer" className="bubble en user" 
