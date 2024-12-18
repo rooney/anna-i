@@ -5,7 +5,7 @@
   --max-chats-width: 625px;
   --assistant-top: 10px;
   --assistant-left: 15px;
-  --shift-2: translateX(calc(var(--assistant-left) - var(--max-chats-width)/2));
+  --assistant-shift: translateX(calc(var(--assistant-left) - var(--max-chats-width)/2));
 }
 
 html, body {
@@ -35,9 +35,9 @@ header {
 }
 #sub {
   @apply fixed left-[50%] top-[var(--assistant-top)] pointer-events-none;
-  transform: var(--shift-2);
+  transform: var(--assistant-shift);
   &.peek {
-    transform: var(--shift-2) rotate(-20deg) translateX(-115px);
+    transform: var(--assistant-shift) rotate(-20deg) translateX(-115px);
   }
 }
 .--green-bubble {
@@ -73,7 +73,7 @@ header {
 }
 #translate-offer {
   @apply border border-dashed border-black rounded-br-[var(--bubble-radius)]
-    text-[12pt] text-blue-500 bg-white underline cursor-pointer scale0;
+    block text-[12pt] text-blue-500 bg-white underline cursor-pointer scale0;
   animation-delay: .5s;
   animation-duration: .2s;
 }
@@ -115,6 +115,12 @@ form {
 .popup {
   animation: popup .35s ease-out forwards;
 }
+.scale0 {
+  transform: scale(0);
+}
+.scale1 {
+  transform: scale(1);
+}
 @keyframes popup {
   0% {
     @apply scale0;
@@ -122,10 +128,4 @@ form {
   100% {
     @apply scale1;
   }
-}
-.scale0 {
-  transform: scale(0);
-}
-.scale1 {
-  transform: scale(1);
 }

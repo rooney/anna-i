@@ -1,0 +1,29 @@
+.spinner {
+  @apply flex;
+  & > div {
+      @apply w-[8px] h-[8px] m-[2px] rounded-[50%];
+      animation: bump 1s linear infinite;
+  }
+  > div:nth-child(1) {
+      animation-delay: -0.4s;
+  }
+  > div:nth-child(2) {
+      animation-delay: -0.2s;
+  }
+}
+@keyframes bump {
+  0%, 20%, 100% {
+    --spinner-color: rgb(156 163 175);
+    background-color: var(--spinner-color);
+    transform: scale(1);
+  }
+  10% {
+    --spinner-blink-color: rgb(31 41 55);
+    --spinner-blink-scale: 1.4;
+    --spinner-blink-y: -3px;
+    background-color: var(--spinner-blink-color);
+    transform: scale(var(--spinner-blink-scale))
+      translateY(var(--spinner-blink-y));
+  }
+}
+  

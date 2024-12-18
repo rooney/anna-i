@@ -1,6 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
-import { MouseEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { translations, Language } from '../translations';
+import Spinner from '../components/spinner';
 
 export const meta: MetaFunction = () => {
   return [
@@ -75,8 +76,7 @@ export default function Index() {
       </header>
       <main>
         <section className="translate-offer">
-          <a id="translate-offer" className="bubble en user" 
-            style={{display: chats.length ? 'none' : 'block'}}
+          <a id="translate-offer" className={chats.length ? 'hidden' : 'bubble en user'}
             onClick={(e) => {
               setSearchTerm('Translate');
               setTimeout(submit, 1);
@@ -125,7 +125,7 @@ export default function Index() {
           else {
             setChats([...chats, 
               {who: 'user', what: searchTerm, lang: lang},
-              {who: 'anna', what: translations[lang].notFound, lang: lang}]);
+              {who: 'anna', what: <Spinner/>, lang: lang}]);
           }
           setTimeout(scrollIntoLatest, 1);
           setSearchTerm('');
