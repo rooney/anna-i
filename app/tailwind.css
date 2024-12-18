@@ -27,14 +27,14 @@ header {
 #greeting {
   @apply --white-bubble rounded-bl-none scale0 origin-bottom-left;
 }
-#assistant, #shift-2 {
+#assistant, #sub {
   @apply w-[175px] h-[263px] transition-transform duration-[.2s] ease-out;
 }
 #assistant {
   @apply ml-[var(--assistant-left)] mt-[var(--assistant-top)];
 }
-#shift-2 {
-  @apply fixed left-[50%] top-[var(--assistant-top)];
+#sub {
+  @apply fixed left-[50%] top-[var(--assistant-top)] pointer-events-none;
   transform: var(--shift-2);
   &.peek {
     transform: var(--shift-2) rotate(-20deg) translateX(-115px);

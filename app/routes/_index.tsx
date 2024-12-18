@@ -44,15 +44,15 @@ export default function Index() {
         if (document.body.clientWidth >= 725) {
           const
             assistant = document.getElementById('assistant'),
-            shift2 = document.getElementById('shift-2');
+            sub = document.getElementById('sub');
           assistant!.style.visibility = 'hidden';
-          shift2!.classList.remove('hidden');
+          sub!.classList.remove('hidden');
 
           document.body.addEventListener('scroll', () => {
             if (document.body.scrollTop > 250) {
-              shift2?.classList.add('peek');
+              sub?.classList.add('peek');
             } else {
-              shift2?.classList.remove('peek');
+              sub?.classList.remove('peek');
             }
           });
         }
@@ -65,14 +65,14 @@ export default function Index() {
   return (
     <>
       <header>
-        <img id="assistant" src="/images/penguin.png"/>
+        <img src="/images/penguin.png" id="assistant"/>
+        <img src="/images/penguin.png" id="sub" className="hidden"/>
         <section>
           <div id="greeting" className="bubble jp">
             {translations.jp.greeting}
           </div>
         </section>
       </header>
-      <img id="shift-2" className="hidden" src="/images/penguin.png"/>
       <main>
         <section className="translate-offer">
           <a id="translate-offer" className="bubble en user" 
