@@ -1,5 +1,5 @@
 .spinner {
-  @apply flex;
+  @apply flex items-center;
   & > div {
       @apply w-[8px] h-[8px] m-[2px] rounded-[50%];
       animation: bump 1s linear infinite;

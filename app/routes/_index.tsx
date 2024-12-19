@@ -30,6 +30,10 @@ function scrollIntoLatest() {
   }
 }
 
+function randomBetween(min:number, max:number) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 export default function Index() {
   const
     [lang, setLang] = useState<Language>("jp"),
@@ -42,7 +46,7 @@ export default function Index() {
 
     const observer = new MutationObserver(() => {
       if (document.body.scrollHeight > document.body.clientHeight) {
-        if (document.body.clientWidth >= 725) {
+        if (document.body.clientWidth >= 740) {
           const
             assistant = document.getElementById('assistant'),
             sub = document.getElementById('sub');
@@ -50,7 +54,7 @@ export default function Index() {
           sub!.classList.remove('hidden');
 
           document.body.addEventListener('scroll', () => {
-            if (document.body.scrollTop > 250) {
+            if (document.body.scrollTop > 265) {
               sub?.classList.add('peek');
             } else {
               sub?.classList.remove('peek');
@@ -123,9 +127,15 @@ export default function Index() {
               {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
           }
           else {
+            const pos = chats.length;
             setChats([...chats, 
               {who: 'user', what: searchTerm, lang: lang},
               {who: 'anna', what: <Spinner/>, lang: lang}]);
+            setTimeout(() => {
+              setChats((chats) => [...chats.slice(0, pos+1), 
+                {who: 'anna', what: translations[lang].notFound, lang: lang},
+                ...chats.slice(pos+2)]);
+            }, randomBetween(400, 4000));
           }
           setTimeout(scrollIntoLatest, 1);
           setSearchTerm('');

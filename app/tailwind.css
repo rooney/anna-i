@@ -28,7 +28,8 @@ header {
   @apply --white-bubble rounded-bl-none scale0 origin-bottom-left;
 }
 #assistant, #sub {
-  @apply w-[175px] h-[263px] transition-transform duration-[.2s] ease-out;
+  @apply w-[175px] h-[263px] transition-transform duration-[.3s] ease-out;
+  transform-origin: bottom left;
 }
 #assistant {
   @apply ml-[var(--assistant-left)] mt-[var(--assistant-top)];
@@ -37,7 +38,8 @@ header {
   @apply fixed left-[50%] top-[var(--assistant-top)] pointer-events-none;
   transform: var(--assistant-shift);
   &.peek {
-    transform: var(--assistant-shift) rotate(-20deg) translateX(-115px);
+    transform: var(--assistant-shift) rotate(-20deg) translateX(-65px);
+    @apply duration-[2s] ease-in-out;
   }
 }
 .--green-bubble {
@@ -45,7 +47,7 @@ header {
 }
 .--white-bubble {
   background-color: rgba(255, 255, 255, 0.85);
-  @media (min-width:725px) {
+  @media (min-width:730px) {
     background-color: rgba(255, 255, 255, 0.95);
   }
 }
