@@ -5,8 +5,9 @@ export const translations = {
       What product are you looking for?
     </>,
     searchHint: 'Product name',
-    notFound: "I don't have such product",
-    error: "I'm sorry, service is currently unavailable"
+    nFound: ' products found',
+    notFound: "Hmm... I don't have that product in my catalog",
+    error: "I'm sorry, service is currently unavailable",
   },
   jp: {
     greeting: <>
@@ -15,7 +16,8 @@ export const translations = {
       私が“あんない”します
     </>,
     searchHint: '製品名',
-    notFound: 'そのような商品はありません',
+    nFound: ' 件の商品が見つかりました',
+    notFound: 'うーん...その商品はカタログに載ってない',
     error: '申し訳ございませんが、現在サービスはご利用いただけません',
   }
 } as const;

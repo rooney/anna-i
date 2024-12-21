@@ -131,3 +131,14 @@ header {
     @apply scale1;
   }
 }
+
+
+.products {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  & img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+}

@@ -140,18 +140,22 @@ export default function Index() {
           const insert_pos = chats.length + 1;
           setTimeout(() => {
             Products.lookup(query)
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error(`${translations[lang].error} (${response.status} ${response.statusText})`);
+              .then((products:Product[]) => {
+                if (products.length) {
+                  return <>
+                    {products.length} {translations[lang].nFound}
+                    <ul className="products">
+                      {products.map((item, index) => 
+                        <li key={index}>
+                          <img src={item.pic}/>
+                          <span>{item.name}</span>
+                        </li>
+                      )}
+                    </ul>
+                  </>
+                } else {
+                  return translations[lang].notFound;
                 }
-                return response.json();
-              })
-              .then((data:Product[]) => {
-                return <ul>
-                    {data.map((item, index) => 
-                      <li key={index}>{item.name}</li>
-                    )}
-                </ul>;
               })
               .catch((error) => {
                 return `${translations[lang].error} (${error.message})`;
