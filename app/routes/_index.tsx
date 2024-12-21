@@ -1,6 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from 'react';
 import { translations, Language } from '../translations';
+import Products, { Product } from '../products';
 import Spinner from '../components/spinner';
 
 export const meta: MetaFunction = () => {
@@ -38,11 +39,13 @@ export default function Index() {
   const
     [lang, setLang] = useState<Language>("jp"),
     [chats, setChats] = useState<Chat[]>([]),
-    [searchTerm, setSearchTerm] = useState<string>("");
+    [query, setQuery] = useState<string>("");
    
   useEffect(() => {
     document.getElementById('greeting')?.classList.add('popup');
     document.getElementById('translate-offer')?.classList.add('popup');
+    document.querySelectorAll<HTMLElement>('#search-bar > span').forEach(
+      (el) => el.style.visibility = 'visible');
 
     const observer = new MutationObserver(() => {
       if (document.body.scrollHeight > document.body.clientHeight) {
@@ -82,7 +85,7 @@ export default function Index() {
         <section className="translate-offer">
           <a id="translate-offer" className={chats.length ? 'hidden' : 'bubble en user'}
             onClick={(e) => {
-              setSearchTerm('Translate');
+              setQuery('Translate');
               setTimeout(submit, 1);
             }}>Translate?</a>
         </section>
@@ -115,38 +118,58 @@ export default function Index() {
             )
           )}
         </section>
-        <form onSubmit={(e) => {
+        <form id="search-bar" onSubmit={(e) => {
           e.preventDefault();
-          if (!searchTerm) {
+          if (!query) {
             return;
           }
-          if (searchTerm.toLowerCase() === "translate") {
+          setQuery('');
+          if (query.toLowerCase() === "translate") {
             setLang('en');
             setChats([...chats, 
-              {who: 'user', what: searchTerm, lang: 'en'}, 
+              {who: 'user', what: query, lang: 'en'}, 
               {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
+            setTimeout(scrollIntoLatest, 1);
+            return;
           }
-          else {
-            const pos = chats.length;
-            setChats([...chats, 
-              {who: 'user', what: searchTerm, lang: lang},
-              {who: 'anna', what: <Spinner/>, lang: lang}]);
-            setTimeout(() => {
-              setChats((chats) => [...chats.slice(0, pos+1), 
-                {who: 'anna', what: translations[lang].notFound, lang: lang},
-                ...chats.slice(pos+2)]);
-            }, randomBetween(400, 4000));
-          }
+          setChats([...chats, 
+            {who: 'user', what: query, lang: lang},
+            {who: 'anna', what: <Spinner/>, lang: lang}]);
           setTimeout(scrollIntoLatest, 1);
-          setSearchTerm('');
+
+          const insert_pos = chats.length + 1;
+          setTimeout(() => {
+            Products.lookup(query)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(`${translations[lang].error} (${response.status} ${response.statusText})`);
+                }
+                return response.json();
+              })
+              .then((data:Product[]) => {
+                return <ul>
+                    {data.map((item, index) => 
+                      <li key={index}>{item.name}</li>
+                    )}
+                </ul>;
+              })
+              .catch((error) => {
+                return `${translations[lang].error} (${error.message})`;
+            }).then((result) => {
+              setChats((chats) => [...chats.slice(0, insert_pos), 
+                {who: 'anna', what: result, lang: lang},
+                ...chats.slice(insert_pos + 1)]
+            );
+           });
+          }, randomBetween(400, 4000));
         }}>
-          <input type="text" id="search-box" autoComplete="off" value={searchTerm}
-            onInput={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
+          <input type="text" id="search-box" autoComplete="off" value={query}
+            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
             placeholder={`${translations[lang].searchHint}`}/>
           <span className="material-symbols-outlined search" onClick={focusOnSearch}>search</span>
-          <span className={searchTerm ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>send</span>
-          <span className={searchTerm ? 'hidden' : 'material-symbols-outlined mic'}>mic</span>
-          <span className={searchTerm ? 'hidden' : 'material-symbols-outlined photo-camera'}>photo_camera</span>
+          <span className={query ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>send</span>
+          <span className={query ? 'hidden' : 'material-symbols-outlined mic'}>mic</span>
+          <span className={query ? 'hidden' : 'material-symbols-outlined photo-camera'}>photo_camera</span>
           <input type="submit" id="submit"/>
         </form>
       </main>

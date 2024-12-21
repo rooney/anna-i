@@ -86,7 +86,7 @@ header {
   @apply text-[20pt] bg-white cursor-pointer p-[5px_10px_0] mr-0 mb-0
     border border-dashed rounded-[16px];
 }
-form {
+#search-bar {
   @apply flex sticky max-w-[600px] m-[15px_auto_0] p-[0_5px] bottom-[5px];
 }
 #search-box {
@@ -96,7 +96,7 @@ form {
   @apply border border-gray-500 rounded-[25px] text-[13pt] p-[10px_68px_9px_35px];
 }
 .material-symbols-outlined {
-  @apply absolute cursor-pointer;
+  @apply absolute cursor-pointer invisible;
   &.search {
     @apply top-[8px] left-[13px] text-[20pt] cursor-default;
   }
