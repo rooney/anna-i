@@ -43,7 +43,7 @@ export default function Index() {
    
   useEffect(() => {
     document.getElementById('greeting')?.classList.add('popup');
-    document.getElementById('translate-offer')?.classList.add('popup');
+    document.getElementById('translate-hint')?.classList.add('popup');
     document.querySelectorAll<HTMLElement>('#search-bar > span').forEach(
       (el) => el.style.visibility = 'visible');
 
@@ -82,37 +82,40 @@ export default function Index() {
         </section>
       </header>
       <main>
-        <section className="translate-offer">
-          <a id="translate-offer" className={chats.length ? 'hidden' : 'bubble en user'}
-            onClick={(e) => {
-              setQuery('Translate');
-              setTimeout(submit, 1);
-            }}>Translate?</a>
-        </section>
+        <a id="translate-hint" style={{ display: chats.length ? 'none' : 'block' }}
+          onClick={(e) => {
+            setQuery('Translate');
+            setTimeout(submit, 1);
+          }}>Translate?
+        </a>
         <section id="discourse">
           {chats.map((chat, index) => 
-            typeof chat.what === "string" && (chat.what.toLowerCase() === "translate") ? (
-              <div className="lang-switch" key={index}>
-                <div className="bubble en translate">{chat.what}</div>
-                <a className="bubble flag" lang="jp" onClick={(e) => {
-                  const
-                    target = e.target as HTMLElement,
-                    newLang = target.getAttribute('lang') as Language;
-                  target.parentElement?.removeChild(target);
-                  if (lang !== newLang) {
-                    setLang(newLang);
-                    setChats([...chats, 
-                      {who: 'anna', what: translations[newLang].greeting, lang: newLang}]);
-                    setTimeout(() => {
-                      scrollIntoLatest();
-                      setTimeout(scrollIntoLatest, 1);
-                    }, 1);
-                    focusOnSearch();
-                  }
-                }}>🇯🇵</a>
+            typeof chat.what === 'string' && (chat.what.toLowerCase() === 'translate') ? (
+              <div className="user flex" key={index}>
+                <div className="flag bubble">
+                  <a className="fi fi-jp" onClick={(e) => {
+                    const
+                      target = e.target as HTMLElement,
+                      parent = target.parentElement,
+                      newLang = target.classList[1].slice(3,5) as Language;
+                    console.log(target.classList);
+                    parent?.parentElement?.removeChild(parent);
+                    if (lang !== newLang) {
+                      setLang(newLang);
+                      setChats([...chats, 
+                        {who: 'anna', what: translations[newLang].greeting, lang: newLang}]);
+                      setTimeout(() => {
+                        scrollIntoLatest();
+                        setTimeout(scrollIntoLatest, 1);
+                      }, 1);
+                      focusOnSearch();
+                    }
+                  }}/>
+                </div>
+                <div className="user bubble en">{chat.what}</div>
               </div>
             ) : (
-              <div className={`bubble ${chat.lang} ${chat.who}`} key={index}>
+              <div className={`${chat.who} bubble ${chat.lang}`} key={index}>
                 {chat.what}
               </div>
             )
@@ -124,7 +127,7 @@ export default function Index() {
             return;
           }
           setQuery('');
-          if (query.toLowerCase() === "translate") {
+          if (query.toLowerCase() === 'translate') {
             setLang('en');
             setChats([...chats, 
               {who: 'user', what: query, lang: 'en'}, 
@@ -148,7 +151,7 @@ export default function Index() {
                       {products.map((item, index) => 
                         <li key={index}>
                           <img src={item.pic}/>
-                          <span>{item.name}</span>
+                          <caption>{item.name}</caption>
                         </li>
                       )}
                     </ul>
@@ -160,11 +163,11 @@ export default function Index() {
               .catch((error) => {
                 return `${translations[lang].error} (${error.message})`;
             }).then((result) => {
-              setChats((chats) => [...chats.slice(0, insert_pos), 
-                {who: 'anna', what: result, lang: lang},
-                ...chats.slice(insert_pos + 1)]
-            );
-           });
+              setChats((chats) => [...chats.slice(0, insert_pos), {
+                who: typeof result === 'string' ? 'anna' : 'anna gallery', 
+                what: result, lang: lang
+              }, ...chats.slice(insert_pos + 1)]);
+            });
           }, randomBetween(400, 4000));
         }}>
           <input type="text" id="search-box" autoComplete="off" value={query}
