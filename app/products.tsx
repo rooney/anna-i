@@ -28,15 +28,36 @@ interface ShowcaseProps {
 }
 
 export const Showcase:React.FC<ShowcaseProps> = ({ products }) => {
-  const [focus, setFocus] = useState(null);
+  function cssVar(name:string) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name);
+  }
+  function cssIntVar(name:string, defaultValue?:number) {
+    const value = parseInt(cssVar(name));
+    return isNaN(value) && defaultValue ? defaultValue : value;
+  }
+  const
+    [focus, setFocus] = useState<number>(-1),
+    numProducts = products.length,
+    screenWidth = window.innerWidth,
+    maxChatsWidth = cssIntVar('--max-chats-width', screenWidth),
+    availableWidth = Math.min(screenWidth, maxChatsWidth),
+    thumbnailSize = cssIntVar('--thumbnail-size', 100),
+    maxColumns = Math.floor(availableWidth / thumbnailSize) - 1,
+    numRows = Math.ceil(numProducts / maxColumns),
+    numCols = Math.ceil(numProducts / numRows);
+
   return (
-    <ul className={styles.products}>
+    <section className={styles.products} style={{
+      gridTemplateColumns: `repeat(${numCols}, ${thumbnailSize}px)`,
+    }}>
       {products.map((item, index) => 
-        <li key={index}>
+        <figure key={index}
+          className={index === focus ? styles.focus : undefined}
+          onClick={() => setFocus(index === focus ? -1 : index)}>
           <img src={item.pic}/>
-          <caption>{item.name}</caption>
-        </li>
+          <figcaption>{item.name}</figcaption>
+        </figure>
       )}
-    </ul>)
+    </section>)
   ;
 };
