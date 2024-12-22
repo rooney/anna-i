@@ -76,7 +76,7 @@ export default function Index() {
         <img src="/images/penguin.png" id="assistant"/>
         <img src="/images/penguin.png" id="sub" className="hidden"/>
         <section>
-          <div id="greeting" className="bubble jp">
+          <div id="greeting" className="anna bubble jp">
             {translations.jp.greeting}
           </div>
         </section>
@@ -154,7 +154,7 @@ export default function Index() {
                     </ul>
                   </>
                 } else {
-                  return translations[lang].notFound;
+                  return translations[lang].noneFound;
                 }
               })
               .catch((error) => {

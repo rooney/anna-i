@@ -13,9 +13,10 @@ html, body {
 }
 body {
   @apply bg-cover bg-center flex flex-col justify-around;
+  font-family: 'Times New Roman', Times, serif;
   background-image: url("/images/bg.jpg");
   @media (min-width:500px) {
-    justify-content: space-evenly;;
+    justify-content: space-evenly;
   }
 }
 header {
@@ -25,7 +26,7 @@ header {
   @apply w-full mx-auto max-w-[var(--max-chats-width)];
 }
 #greeting {
-  @apply --white-bubble rounded-bl-none scale0 origin-bottom-left;
+  @apply white-bubble scale0 origin-bottom-left rounded-bl-none rounded-tl-[var(--bubble-radius)];
 }
 #assistant, #sub {
   @apply w-[175px] h-[263px] transition-transform duration-[.3s] ease-out;
@@ -42,10 +43,10 @@ header {
     @apply duration-[2s] ease-in-out;
   }
 }
-.--green-bubble {
+.green-bubble {
   background-color: rgba(124, 252, 0, 0.8);
 }
-.--white-bubble {
+.white-bubble {
   background-color: rgba(255, 255, 255, 0.85);
   @media (min-width:730px) {
     background-color: rgba(255, 255, 255, 0.95);
@@ -54,20 +55,18 @@ header {
 .bubble {
   @apply w-fit m-[10px] rounded-[var(--bubble-radius)];
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  &.anna {
-    @apply --white-bubble popup rounded-tl-none scale0 origin-top-left;
-  }
+  @apply text-[14pt] p-[12px_17px];
   &.user {
-    @apply --green-bubble rounded-br-none ml-auto;
+    @apply green-bubble rounded-br-none ml-auto;
   }
-  &.en {
-    @apply text-[14pt] p-[12px_17px];
-  }
-  &.jp {
-    @apply text-[16pt] p-[10px_15px];
-  }
+  &.anna {
+    @apply white-bubble popup rounded-tl-none scale0 origin-top-left;
+      &.jp {
+        @apply text-[16pt] p-[10px_15px];
+      }
+    }
   &.translate {
-    @apply --green-bubble rounded-br-none mb-0;
+    @apply green-bubble rounded-br-none mb-0;
   }
 }
 .translate-offer {
@@ -131,8 +130,6 @@ header {
     @apply scale1;
   }
 }
-
-
 .products {
   list-style: none;
   display: grid;
