@@ -6,6 +6,7 @@
   --assistant-top: 10px;
   --assistant-left: 15px;
   --assistant-shift: translateX(calc(var(--assistant-left) - var(--max-chats-width)/2));
+  --thumbnail-size: 100px;
 }
 
 html, body {
@@ -44,27 +45,24 @@ header {
 #greeting {
   @apply m-[10px] origin-bottom-left scale0 rounded-bl-none rounded-tl-[var(--bubble-radius)];
 }
-#discourse {
+#converse {
   > * {
     @apply w-fit m-[10px];
   }
   > .user {
     @apply ml-auto;
   }
-  > .gallery {
-    @apply w-auto;
-  }
 }
 .bubble {
-  @apply rounded-[var(--bubble-radius)];
+  @apply text-[12pt] rounded-[var(--bubble-radius)] p-[12px_12px_9px_14px];
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  @apply text-[14pt] p-[12px_17px];
+  line-height: 1.25;
 }
 .bubble.user {
   @apply rounded-br-none bg-[rgba(124,252,0,0.8)];
 }
 .bubble.anna {
-  @apply origin-top-left rounded-tl-none scale0 popup bg-[rgba(255,255,255,0.85)];
+  @apply rounded-tl-none bg-[rgba(255,255,255,0.85)] p-[12px_25px_12px_17px] scale0 popup origin-top-left;
   @media (min-width:730px) {
     background-color: rgba(255, 255, 255, 0.95);
   }
@@ -72,18 +70,17 @@ header {
 .bubble.anna.jp {
   @apply text-[16pt] p-[10px_15px];
 }
-.bubble.flag {
-  @apply border border-dashed mr-[10px];
-}
 .fi {
-  @apply border border-dashed cursor-pointer;
+  @apply border border-solid border-gray-500;
+}
+.hint {
+  @apply border border-dashed border-black p-[9px];
 }
 #translate-hint {
   @apply w-fit scale0 ml-auto cursor-pointer
-  bg-white bubble
-  border-black border-dashed border mr-[15px]
+  bg-white bubble hint
   text-blue-500 underline;
-  font-size: 12pt;
+  margin-right: 15px;
   animation-delay: .5s;
   animation-duration: .2s;
 }
@@ -131,25 +128,4 @@ header {
 }
 .scale1 {
   transform: scale(1);
-}
-.products {
-  padding-left: 0;
-  list-style: none;
-  display: grid;
-  gap: 5px;
-  align-items: center;
-  margin: 15px 0 5px;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 100px));
-  img {
-    max-width: 100px;
-    max-height: 100px;
-    display: block;
-    margin: 0 auto;
-  }
-  caption {
-    text-align: center;
-    display: block;
-    font-size: 11pt;
-    margin-top: 3px;
-  }
 }
