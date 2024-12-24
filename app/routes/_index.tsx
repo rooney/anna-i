@@ -1,12 +1,13 @@
-import type { MetaFunction } from "@remix-run/node";
-import { useEffect, useState, useRef, SetStateAction } from 'react';
-import { translations, Language } from '../translations';
-import { Spinner } from '../components';
-import Products, { Product, Showcase } from '../products';
+import { useEffect, useState, useRef } from 'react';
+import { type MetaFunction } from "@remix-run/node";
+import { type Language, translations } from '~/translations';
+import { randomBetween } from "~/utils";
+import { Spinner } from '~/components';
+import Products, { type Product, Showcase } from '~/components/products';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "ANNA-i" },
+    { title: "ANNA-𝒾" },
   ];
 };
 
@@ -20,10 +21,6 @@ function submit() {
   document.getElementById('submit')?.click();
 }
 
-function randomBetween(min:number, max:number) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
 export default function Index() {
   const
     [lang, setLang] = useState<Language>("jp"),
@@ -33,31 +30,25 @@ export default function Index() {
     converse = useRef<HTMLElement>(null);
 
   function focusOnSearch() {
-    searchBox.current?.focus();
+    searchBox.current!.focus();
   }
 
   function scrollIntoLatest() {
-    const lastChat = converse.current?.lastElementChild;
-    if (lastChat) {
-      lastChat.scrollIntoView({ behavior: 'smooth' });
-    }
+    converse.current!.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
   }
 
-  function updateChats(update:(chats:Chat[]) => Chat[]) {
-    setChats(update);
+  function updateChats(theUpdate: (chats: Chat[]) => Chat[]) {
+    setChats(theUpdate);
     setTimeout(scrollIntoLatest, 100);
   }
 
-  function insertChats(newChats:Chat[]) {
+  function insertChats(newChats: Chat[]) {
     updateChats((chats) => [...chats, ...newChats]);
   }
   
   useEffect(() => {
-    document.getElementById('greeting')?.classList.add('popup');
-    document.getElementById('translate-hint')?.classList.add('popup');
-    document.querySelectorAll<HTMLElement>('#search-bar > span')
-      .forEach((el) => el.style.visibility = 'visible');
-
+    document.getElementById('greeting')!.removeAttribute('style');
+    document.getElementById('translate-hint')!.style.transform = '';
     const observer = new MutationObserver(() => {
       if (document.body.scrollHeight > document.body.clientHeight) {
         if (document.body.clientWidth >= 740) {
@@ -68,11 +59,9 @@ export default function Index() {
           sub!.classList.remove('hidden');
 
           document.body.addEventListener('scroll', () => {
-            if (document.body.scrollTop > 265) {
-              sub?.classList.add('peek');
-            } else {
+            document.body.scrollTop > 265 ?
+              sub?.classList.add('peek') :
               sub?.classList.remove('peek');
-            }
           });
         }
         observer.disconnect();
@@ -84,16 +73,19 @@ export default function Index() {
   return (
     <>
       <header>
-        <img src="/images/penguin.png" id="assistant"/>
-        <img src="/images/penguin.png" id="sub" className="hidden"/>
+        <img src="/images/penguin.png" id="assistant" />
+        <img src="/images/penguin.png" id="sub" className="hidden" />
         <section>
-          <div id="greeting" className="anna bubble jp">
+          <div id="greeting" className="bubble anna jp" style={{ transform: 'scale(0)' }}>
             {translations.jp.greeting}
           </div>
         </section>
       </header>
       <main>
-        <a id="translate-hint" style={{ display: chats.length ? 'none' : 'block' }}
+        <a id="translate-hint" className="bubble hint" style={{
+          display: chats.length ? 'none' : 'block',
+          transform: 'scale(0)',
+        }}
           onClick={(e) => {
             setQuery('Translate');
             setTimeout(submit, 1);
@@ -102,9 +94,9 @@ export default function Index() {
         <section id="converse" ref={converse}>
           {chats.map((chat, index) => 
             typeof chat.what === 'string' && (chat.what.toLowerCase() === 'translate') ? (
-              <div className="user flex gap-[8px]" key={index}>
-                <div className="bubble hint">
-                  <a className="fi fi-jp cursor-pointer" onClick={(e) => {
+              <div className="user translate" key={index}>
+                <div className="bubble hint flag">
+                  <a className="fi fi-jp" onClick={(e) => {
                     const
                       target = e.target as HTMLElement,
                       parent = target.parentElement,
@@ -120,23 +112,22 @@ export default function Index() {
                       }]);
                       focusOnSearch();
                     }
-                  }}/>
+                  }} />
                 </div>
-                <div className="user bubble en">{chat.what}</div>
+                <div className="bubble user en">{chat.what}</div>
               </div>
             ) : (
-              <div className={`${chat.who} bubble ${chat.lang}`} key={index}>
+              <div className={`bubble ${chat.who} ${chat.lang}`} key={index}>
                 {chat.what}
               </div>
             )
           )}
         </section>
-        <form id="search-bar" onSubmit={(e) => {
-          e.preventDefault();
-          if (!query) {
-            return;
-          }
+        <form id="search-bar" onSubmit={(e?) => {
+          e?.preventDefault();
+
           setQuery('');
+          if (!query) return;
           if (query.toLowerCase() === 'translate') {
             setLang('en');
             insertChats([ 
@@ -144,42 +135,50 @@ export default function Index() {
               {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
             return;
           }
+
           insertChats([ 
             {who: 'user', what: query, lang: lang},
             {who: 'anna', what: <Spinner/>, lang: lang},
           ]);
+
           const insert_pos = chats.length + 1;
           setTimeout(() => {
             Products.lookup(query)
-              .then((products:Product[]) => {
-                if (products.length) {
-                  return <>
-                    {products.length} {translations[lang].nFound}
-                    <Showcase products={products}/>
-                  </>
-                } else {
-                  return translations[lang].noneFound;
-                }
-              })
-              .catch((error) => {
-                return `${translations[lang].error} (${error.message})`;
-            }).then((result) => {
+            .catch((error) => {
+              throw <>
+                {translations[lang].error} &#32;
+                <span className="en">({error.message})</span>
+              </>
+            })
+            .then((products: Product[]) => {
+              if (!products.length) throw translations[lang].noneFound;
+              return {
+                who: 'anna showcase',
+                what: <>
+                  {translations[lang].formatNumber(products.length)}
+                  {translations[lang].nFound}
+                  <Showcase products={products} cols={3} />
+                </>,
+                lang: lang,
+              };
+
+            })
+            .catch((msg) => ({ who: 'anna', what: msg, lang: lang }))
+            .then((result) => {
               updateChats((chats) => [
-                ...chats.slice(0, insert_pos),
-                { who: 'anna', what: result, lang: lang },
-                ...chats.slice(insert_pos + 1),
+                ...chats.slice(0, insert_pos), result, ...chats.slice(insert_pos + 1),
               ]);
             });
-          }, randomBetween(400, 4000));
+          }, randomBetween(1000, 3000));
         }}>
           <input type="text" id="search-box" ref={searchBox} autoComplete="off" value={query}
             onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
-            placeholder={`${translations[lang].searchHint}`}/>
-          <span className="material-symbols-outlined search" onClick={focusOnSearch}>search</span>
-          <span className={query ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>send</span>
-          <span className={query ? 'hidden' : 'material-symbols-outlined mic'}>mic</span>
-          <span className={query ? 'hidden' : 'material-symbols-outlined photo-camera'}>photo_camera</span>
-          <input type="submit" id="submit"/>
+            placeholder={`${translations[lang].searchHint}`} />
+          <span className="material-symbols-outlined search" onClick={focusOnSearch}>&#xe8b6;</span>
+          <span className={query ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>&#xe163;</span>
+          <span className={query ? 'hidden' : 'material-symbols-outlined mic'}>&#xe029;</span>
+          <span className={query ? 'hidden' : 'material-symbols-outlined photo-camera'}>&#xe412;</span>
+          <input type="submit" id="submit" />
         </form>
       </main>
     </>
