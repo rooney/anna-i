@@ -14,7 +14,6 @@ export const meta: MetaFunction = () => {
 type Chat = {
   who: string;
   what: string | JSX.Element;
-  lang: Language;
 };
 
 function submit() {
@@ -106,9 +105,8 @@ export default function Index() {
                     if (lang !== newLang) {
                       setLang(newLang);
                       insertChats([{
-                        who: 'anna pop', 
-                        what: translations[newLang].greeting, 
-                        lang: newLang,
+                        who: `anna pop ${newLang}`, 
+                        what: translations[newLang].greeting,
                       }]);
                       focusOnSearch();
                     }
@@ -118,7 +116,7 @@ export default function Index() {
               </div>
             )
             return (
-              <div className={classes('bubble', chat.who, chat.lang, index === 1 && 'pop')} key={index}>
+              <div className={classes('bubble', chat.who, index === 1 && 'pop')} key={index}>
                 {chat.what}
               </div>
             )
@@ -132,14 +130,14 @@ export default function Index() {
           if (query.toLowerCase() === 'translate') {
             setLang('en');
             insertChats([ 
-              {who: 'user', what: query, lang: 'en'}, 
-              {who: 'anna pop', what: translations.en.greeting, lang: 'en'}]);
+              {who: 'user en', what: query}, 
+              {who: 'anna en pop', what: translations.en.greeting}]);
             return;
           }
 
           insertChats([ 
-            {who: 'user', what: query, lang: lang},
-            {who: 'anna', what: <Spinner/>, lang: lang},
+            {who: `user ${lang}`, what: query},
+            {who: 'anna', what: <Spinner/>},
           ]);
 
           const insert_pos = chats.length + 1;
