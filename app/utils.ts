@@ -34,4 +34,8 @@ export function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export default {cssVar, cssIntVar, isFullyVisible, randomBetween};
+export function classes(...classNames: (string|boolean)[]) {
+  return classNames.filter((x) => x).join(' ');
+}
+
+export default {classes, cssVar, cssIntVar, isFullyVisible, randomBetween};

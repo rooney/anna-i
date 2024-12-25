@@ -106,3 +106,13 @@ header {
 #submit {
   @apply hidden;
 }
+.pop {
+  transform: scale(0);
+  transform-origin: top left;
+  animation: popup 0.3s ease-out forwards;
+}
+@keyframes popup {
+  to {
+    transform: scale(1);
+  }
+}

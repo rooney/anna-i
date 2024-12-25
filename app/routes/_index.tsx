@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { type MetaFunction } from "@remix-run/node";
 import { type Language, translations } from '~/translations';
-import { randomBetween } from "~/utils";
+import { classes, randomBetween } from "~/utils";
 import { Spinner } from '~/components';
 import Products, { type Product, Showcase } from '~/components/products';
 
@@ -92,8 +92,8 @@ export default function Index() {
           }}>Translate?
         </a>
         <section id="converse" ref={converse}>
-          {chats.map((chat, index) => 
-            typeof chat.what === 'string' && (chat.what.toLowerCase() === 'translate') ? (
+          {chats.map((chat, index) => {
+            if (typeof chat.what === 'string' && chat.what.toLowerCase() === 'translate') return (
               <div className="user translate" key={index}>
                 <div className="bubble hint flag">
                   <a className="fi fi-jp" onClick={(e) => {
@@ -106,7 +106,7 @@ export default function Index() {
                     if (lang !== newLang) {
                       setLang(newLang);
                       insertChats([{
-                        who: 'anna', 
+                        who: 'anna pop', 
                         what: translations[newLang].greeting, 
                         lang: newLang,
                       }]);
@@ -116,12 +116,13 @@ export default function Index() {
                 </div>
                 <div className="bubble user en">{chat.what}</div>
               </div>
-            ) : (
-              <div className={`bubble ${chat.who} ${chat.lang}`} key={index}>
+            )
+            return (
+              <div className={classes('bubble', chat.who, chat.lang, index === 1 && 'pop')} key={index}>
                 {chat.what}
               </div>
             )
-          )}
+          })}
         </section>
         <form id="search-bar" onSubmit={(e?) => {
           e?.preventDefault();
@@ -132,7 +133,7 @@ export default function Index() {
             setLang('en');
             insertChats([ 
               {who: 'user', what: query, lang: 'en'}, 
-              {who: 'anna', what: translations.en.greeting, lang: 'en'}]);
+              {who: 'anna pop', what: translations.en.greeting, lang: 'en'}]);
             return;
           }
 
