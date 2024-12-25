@@ -72,8 +72,8 @@ export default function Index() {
   return (
     <>
       <header>
-        <img src="/images/penguin.png" id="assistant" />
-        <img src="/images/penguin.png" id="sub" className="hidden" />
+        <img src="/images/penguin.png" id="assistant"/>
+        <img src="/images/penguin.png" id="sub" className="hidden"/>
         <section>
           <div id="greeting" className="bubble anna jp" style={{ transform: 'scale(0)' }}>
             {translations.jp.greeting}
@@ -110,7 +110,7 @@ export default function Index() {
                       }]);
                       focusOnSearch();
                     }
-                  }} />
+                  }}/>
                 </div>
                 <div className="bubble user en">{chat.what}</div>
               </div>
@@ -156,7 +156,7 @@ export default function Index() {
                 what: <>
                   {translations[lang].formatNumber(products.length)}
                   {translations[lang].nFound}
-                  <Showcase products={products} cols={3} />
+                  <Showcase products={products} cols={3}/>
                 </>,
                 lang: lang,
               };
@@ -172,12 +172,12 @@ export default function Index() {
         }}>
           <input type="text" id="search-box" ref={searchBox} autoComplete="off" value={query}
             onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
-            placeholder={`${translations[lang].searchHint}`} />
+            placeholder={`${translations[lang].searchHint}`}/>
           <span className="material-symbols-outlined search" onClick={focusOnSearch}>&#xe8b6;</span>
           <span className={query ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>&#xe163;</span>
           <span className={query ? 'hidden' : 'material-symbols-outlined mic'}>&#xe029;</span>
           <span className={query ? 'hidden' : 'material-symbols-outlined photo-camera'}>&#xe412;</span>
-          <input type="submit" id="submit" />
+          <input type="submit" id="submit"/>
         </form>
       </main>
     </>
