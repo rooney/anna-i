@@ -38,4 +38,8 @@ export function classes(...classNames: (string|boolean)[]) {
   return classNames.filter((x) => x).join(' ');
 }
 
-export default {classes, cssVar, cssIntVar, isFullyVisible, randomBetween};
+export function isDesktop() {
+  return window.matchMedia('(hover:hover)').matches;  
+}
+
+export default {classes, cssVar, cssIntVar, isDesktop, isFullyVisible, randomBetween};

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { type MetaFunction } from "@remix-run/node";
 import { type Language, translations } from '~/translations';
-import { classes, randomBetween } from "~/utils";
+import { classes, isDesktop, randomBetween } from "~/utils";
 import { Spinner } from '~/components';
 import Products, { type Product, Showcase } from '~/components/products';
 
@@ -29,7 +29,7 @@ export default function Index() {
     converse = useRef<HTMLElement>(null);
 
   function focusOnSearch() {
-    searchBox.current!.focus();
+    searchBox.current?.focus();
   }
 
   function scrollIntoLatest() {
@@ -108,7 +108,7 @@ export default function Index() {
                         who: `anna pop ${newLang}`, 
                         what: translations[newLang].greeting,
                       }]);
-                      focusOnSearch();
+                      isDesktop() && focusOnSearch();
                     }
                   }}/>
                 </div>
@@ -132,6 +132,7 @@ export default function Index() {
             insertChats([ 
               {who: 'user en', what: query}, 
               {who: 'anna en pop', what: translations.en.greeting}]);
+            isDesktop() && focusOnSearch();
             return;
           }
 
