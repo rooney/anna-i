@@ -44,7 +44,7 @@
   figcaption {
     font-size: 10pt;
     font-weight: 300;
-    margin: 3px 0;
+    margin-bottom: 12px;
     text-overflow: ellipsis;
     overflow: hidden;
   }

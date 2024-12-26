@@ -112,7 +112,7 @@ export default function Index() {
                     }
                   }}/>
                 </div>
-                <div className="bubble user en">{chat.what}</div>
+                <div className="bubble user">{chat.what}</div>
               </div>
             )
             return (
@@ -130,14 +130,14 @@ export default function Index() {
           if (query.toLowerCase() === 'translate') {
             setLang('en');
             insertChats([ 
-              {who: 'user en', what: query}, 
+              {who: 'user', what: query}, 
               {who: 'anna en pop', what: translations.en.greeting}]);
             isDesktop() && focusOnSearch();
             return;
           }
 
           insertChats([ 
-            {who: `user ${lang}`, what: query},
+            {who: 'user', what: query},
             {who: 'anna', what: <Spinner/>},
           ]);
 
@@ -155,15 +155,16 @@ export default function Index() {
               return {
                 who: 'anna showcase',
                 what: <>
-                  {translations[lang].formatNumber(products.length)}
-                  {translations[lang].nFound}
+                  <span className={lang}>
+                    {translations[lang].formatNumber(products.length)}
+                    {translations[lang].nFound}
+                  </span>
                   <Showcase products={products} cols={3}/>
                 </>,
-                lang: lang,
               };
 
             })
-            .catch((msg) => ({ who: 'anna', what: msg, lang: lang }))
+            .catch((msg) => ({ who: `anna ${lang}`, what: msg }))
             .then((result) => {
               updateChats((chats) => [
                 ...chats.slice(0, insert_pos), result, ...chats.slice(insert_pos + 1),

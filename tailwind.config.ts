@@ -5,8 +5,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        jp: ['serif'],
+        sans: ['Noto Sans'],
         logo: ['Varela Round'],
+        jp: ['serif'],
       },
     },
   },

@@ -10,8 +10,7 @@ html, body {
   @apply w-full h-full m-0 overflow-x-hidden;
 }
 body {
-  font-family: 'Varela Round';
-  @apply bg-[url('/images/bg.jpg')] bg-cover bg-center break-keep text-[12pt];
+  @apply en bg-[url('/images/bg.jpg')] bg-cover bg-center break-keep;
   > * {
    @apply w-full mx-auto max-w-[var(--max-chats-width)]
   }
@@ -50,33 +49,39 @@ header {
   }
 }
 .bubble {
-  @apply rounded-[var(--bubble-radius)] bg-white bg-opacity-80 p-[12px_12px_10px_14px] max-w-[calc(100vw-40px)];
+  @apply rounded-[var(--bubble-radius)] bg-white bg-opacity-80 p-[9px_18px] max-w-[calc(100vw-40px)];
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 .bubble.user {
   @apply rounded-br-none bg-[rgb(124,252,0)] bg-opacity-80;
 }
 .bubble.anna {
-  @apply rounded-tl-none p-[12px_22px_12px_17px];
+  @apply rounded-tl-none;
   backdrop-filter: blur(5px);
 }
 .bubble.anna.showcase {
-  @apply px-[12px];
+  @apply pb-0;
 }
 .bubble.anna.jp {
-  @apply text-[16pt] p-[10px_12px] font-jp;
+  @apply text-[16pt] font-jp;
 }
-.flag {
-  @apply p-[9px] rounded-[15px];
+.bubble.anna.en {
+  @apply pb-[11px] pr-[22px];
+}
+.en {
+  @apply text-[12pt] font-sans;
 }
 .fi {
   @apply border border-solid border-gray-500 cursor-pointer;
 }
-.hint {
-  @apply border border-dashed border-black;
+.flag {
+  @apply p-[8px] rounded-[14px] h-fit;
 }
 .translate {
   @apply flex gap-[8px];
+}
+.hint {
+  @apply border border-dashed border-black;
 }
 #translate-hint {
   @apply ml-auto mr-[15px] w-fit delay-500 duration-200
