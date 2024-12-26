@@ -18,12 +18,12 @@ type Chat = {
 
 export default function Index() {
   const
+    [lang, setLang] = useState<Language>('jp'),
     [chats, setChats] = useState<Chat[]>([]),
     [userInput, setUserInput] = useState<string>(''),
     searchBar = useRef<HTMLFormElement>(null),
     searchBox = useRef<HTMLInputElement>(null),
-    converse = useRef<HTMLElement>(null),
-    lang = useRef<Language>('jp');
+    converse = useRef<HTMLElement>(null);
 
   function focusOnSearch() {
     searchBox.current?.focus();
@@ -51,7 +51,7 @@ export default function Index() {
   function send(q: string) {
     if (!q) return;
     if (q.toLowerCase() === 'translate') {
-      lang.current = 'en';
+      setLang('en');
       insertChats([ 
         {who: 'user', what: q}, 
         {who: 'anna en pop', what: translations.en.greeting}]);
@@ -68,18 +68,18 @@ export default function Index() {
       Products.lookup(q)
       .catch((error) => {
         throw <>
-          {translations[lang.current].error} &#32;
+          {translations[lang].error} &#32;
           <span className="en">({error.message})</span>
         </>
       })
       .then((products: Product[]) => {
-        if (!products.length) throw translations[lang.current].noneFound;
+        if (!products.length) throw translations[lang].noneFound;
         return {
           who: 'anna showcase',
           what: <>
-            <span className={lang.current}>
-              {translations[lang.current].formatNumber(products.length)}
-              {translations[lang.current].nFound}
+            <span className={lang}>
+              {translations[lang].formatNumber(products.length)}
+              {translations[lang].nFound}
             </span>
             <Showcase products={products} cols={3}/>
           </>,
@@ -100,8 +100,8 @@ export default function Index() {
       parent = target.parentElement,
       newLang = target.classList[1].slice(3,5) as Language;
     parent!.parentElement!.removeChild(parent!);
-    if (lang.current !== newLang) {
-      lang.current = newLang;
+    if (lang !== newLang) {
+      setLang(newLang);
       insertChats([{
         who: `anna pop ${newLang}`, 
         what: translations[newLang].greeting,
@@ -171,7 +171,7 @@ export default function Index() {
         </section>
         <form id="search-bar" ref={searchBar} onSubmit={submit}>
           <input id="search-box" ref={searchBox} onInput={(e) => setUserInput((e.target as HTMLInputElement).value)}
-            type="text" autoComplete="off" value={userInput} placeholder={translations[lang.current].searchHint}/>
+            type="text" autoComplete="off" value={userInput} placeholder={translations[lang].searchHint}/>
           <span className="material-symbols-outlined search" onClick={focusOnSearch}>&#xe8b6;</span>
           <span className={userInput ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>&#xe163;</span>
           <span className={userInput ? 'hidden' : 'material-symbols-outlined mic'}>&#xe029;</span>
