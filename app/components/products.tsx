@@ -32,15 +32,6 @@ export const Showcase: React.FC<ShowcaseProps> = ({ products, cols }) => {
     self = useRef<HTMLElement>(null),
     rows = Math.ceil(products.length / cols);
 
-
-  function keepSize() {
-    const
-      showcase = self.current!,
-      style = showcase.style;
-    style.minWidth = showcase.offsetWidth + 'px';
-    style.minHeight = showcase.offsetHeight + 'px';
-  }
-
   useEffect(() => {
     const handleResize = () => {
       self.current?.removeAttribute('style');
@@ -52,7 +43,7 @@ export const Showcase: React.FC<ShowcaseProps> = ({ products, cols }) => {
   }, []);
 
   return (
-    <section className={styles.showcase} ref={self} onTransitionEnd={keepSize}>
+    <section className={styles.showcase} ref={self}>
       {Array.from({ length: rows }, (_, i) => {
         const
           isFirstRow = rows > 1 && i === 0,

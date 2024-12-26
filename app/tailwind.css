@@ -49,7 +49,7 @@ header {
   }
 }
 .bubble {
-  @apply rounded-[var(--bubble-radius)] bg-white bg-opacity-80 p-[9px_18px] max-w-[calc(100vw-40px)];
+  @apply rounded-[var(--bubble-radius)] bg-white bg-opacity-80 p-[9px_18px] max-w-[calc(100vw-49px)];
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 .bubble.user {
@@ -62,14 +62,14 @@ header {
 .bubble.anna.showcase {
   @apply pb-0;
 }
-.bubble.anna.jp {
-  @apply text-[16pt] font-jp;
-}
 .bubble.anna.en {
   @apply pb-[11px] pr-[22px];
 }
 .en {
   @apply text-[12pt] font-sans;
+}
+.jp {
+  @apply text-[16pt] font-jp;
 }
 .fi {
   @apply border border-solid border-gray-500 cursor-pointer;
