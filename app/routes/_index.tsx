@@ -16,15 +16,12 @@ type Chat = {
   what: string | JSX.Element;
 };
 
-function submit() {
-  document.getElementById('submit')?.click();
-}
-
 export default function Index() {
   const
     [lang, setLang] = useState<Language>("jp"),
     [chats, setChats] = useState<Chat[]>([]),
     [query, setQuery] = useState<string>(""),
+    searchBar = useRef<HTMLFormElement>(null),
     searchBox = useRef<HTMLInputElement>(null),
     converse = useRef<HTMLElement>(null);
 
@@ -33,7 +30,7 @@ export default function Index() {
   }
 
   function scrollIntoLatest() {
-    converse.current!.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+    converse.current!.lastElementChild!.scrollIntoView({ behavior: 'smooth' });
   }
 
   function updateChats(theUpdate: (chats: Chat[]) => Chat[]) {
@@ -43,6 +40,74 @@ export default function Index() {
 
   function insertChats(newChats: Chat[]) {
     updateChats((chats) => [...chats, ...newChats]);
+  }
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    send(query);
+    setQuery('');
+  }
+
+  function send(q: string) {
+    if (!q) return;
+    if (q.toLowerCase() === 'translate') {
+      setLang('en');
+      insertChats([ 
+        {who: 'user', what: q}, 
+        {who: 'anna en pop', what: translations.en.greeting}]);
+      return isDesktop() && focusOnSearch();
+    }
+
+    insertChats([ 
+      {who: 'user', what: q},
+      {who: 'anna', what: <Spinner/>},
+    ]);
+
+    const insert_pos = chats.length + 1;
+    setTimeout(() => {
+      Products.lookup(q)
+      .catch((error) => {
+        throw <>
+          {translations[lang].error} &#32;
+          <span className="en">({error.message})</span>
+        </>
+      })
+      .then((products: Product[]) => {
+        if (!products.length) throw translations[lang].noneFound;
+        return {
+          who: 'anna showcase',
+          what: <>
+            <span className={lang}>
+              {translations[lang].formatNumber(products.length)}
+              {translations[lang].nFound}
+            </span>
+            <Showcase products={products} cols={3}/>
+          </>,
+        };
+      })
+      .catch((msg) => ({ who: `anna ${lang}`, what: msg }))
+      .then((result) => {
+        updateChats((chats) => [
+          ...chats.slice(0, insert_pos), result, ...chats.slice(insert_pos + 1),
+        ]);
+      });
+    }, randomBetween(1000, 3000));
+  }
+
+  function flagLanguage(e: React.MouseEvent) {
+    const
+      target = e.target as HTMLElement,
+      parent = target.parentElement,
+      newLang = target.classList[1].slice(3,5) as Language;
+    parent!.parentElement!.removeChild(parent!);
+    if (lang !== newLang) {
+      setLang(newLang);
+      insertChats([{
+        who: `anna pop ${newLang}`, 
+        what: translations[newLang].greeting,
+      }]);
+      isDesktop() && focusOnSearch();
+    }
   }
   
   useEffect(() => {
@@ -59,8 +124,8 @@ export default function Index() {
 
           document.body.addEventListener('scroll', () => {
             document.body.scrollTop > 265 ?
-              sub?.classList.add('peek') :
-              sub?.classList.remove('peek');
+              sub!.classList.add('peek') :
+              sub!.classList.remove('peek');
           });
         }
         observer.disconnect();
@@ -81,36 +146,18 @@ export default function Index() {
         </section>
       </header>
       <main>
-        <a id="translate-hint" className="bubble hint" style={{
+        <a id="translate-hint" className="bubble hint" onClick={() => send('Translate')} style={{
           display: chats.length ? 'none' : 'block',
           transform: 'scale(0)',
-        }}
-          onClick={(e) => {
-            setQuery('Translate');
-            setTimeout(submit, 1);
-          }}>Translate?
+        }}>
+          Translate?
         </a>
         <section id="converse" ref={converse}>
           {chats.map((chat, index) => {
             if (typeof chat.what === 'string' && chat.what.toLowerCase() === 'translate') return (
               <div className="user translate" key={index}>
                 <div className="bubble hint flag">
-                  <a className="fi fi-jp" onClick={(e) => {
-                    const
-                      target = e.target as HTMLElement,
-                      parent = target.parentElement,
-                      newLang = target.classList[1].slice(3,5) as Language;
-                    console.log(target.classList);
-                    parent?.parentElement?.removeChild(parent);
-                    if (lang !== newLang) {
-                      setLang(newLang);
-                      insertChats([{
-                        who: `anna pop ${newLang}`, 
-                        what: translations[newLang].greeting,
-                      }]);
-                      isDesktop() && focusOnSearch();
-                    }
-                  }}/>
+                  <a className="fi fi-jp" onClick={flagLanguage}/>
                 </div>
                 <div className="bubble user">{chat.what}</div>
               </div>
@@ -122,64 +169,14 @@ export default function Index() {
             )
           })}
         </section>
-        <form id="search-bar" onSubmit={(e?) => {
-          e?.preventDefault();
-
-          setQuery('');
-          if (!query) return;
-          if (query.toLowerCase() === 'translate') {
-            setLang('en');
-            insertChats([ 
-              {who: 'user', what: query}, 
-              {who: 'anna en pop', what: translations.en.greeting}]);
-            isDesktop() && focusOnSearch();
-            return;
-          }
-
-          insertChats([ 
-            {who: 'user', what: query},
-            {who: 'anna', what: <Spinner/>},
-          ]);
-
-          const insert_pos = chats.length + 1;
-          setTimeout(() => {
-            Products.lookup(query)
-            .catch((error) => {
-              throw <>
-                {translations[lang].error} &#32;
-                <span className="en">({error.message})</span>
-              </>
-            })
-            .then((products: Product[]) => {
-              if (!products.length) throw translations[lang].noneFound;
-              return {
-                who: 'anna showcase',
-                what: <>
-                  <span className={lang}>
-                    {translations[lang].formatNumber(products.length)}
-                    {translations[lang].nFound}
-                  </span>
-                  <Showcase products={products} cols={3}/>
-                </>,
-              };
-
-            })
-            .catch((msg) => ({ who: `anna ${lang}`, what: msg }))
-            .then((result) => {
-              updateChats((chats) => [
-                ...chats.slice(0, insert_pos), result, ...chats.slice(insert_pos + 1),
-              ]);
-            });
-          }, randomBetween(1000, 3000));
-        }}>
-          <input type="text" id="search-box" ref={searchBox} autoComplete="off" value={query}
-            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
-            placeholder={`${translations[lang].searchHint}`}/>
+        <form id="search-bar" ref={searchBar} onSubmit={submit}>
+          <input id="search-box" ref={searchBox}
+            type="text" autoComplete="off" value={query} placeholder={translations[lang].searchHint}
+            onInput={(e) => setQuery((e.target as HTMLInputElement).value)}/>/
           <span className="material-symbols-outlined search" onClick={focusOnSearch}>&#xe8b6;</span>
           <span className={query ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>&#xe163;</span>
           <span className={query ? 'hidden' : 'material-symbols-outlined mic'}>&#xe029;</span>
           <span className={query ? 'hidden' : 'material-symbols-outlined photo-camera'}>&#xe412;</span>
-          <input type="submit" id="submit"/>
         </form>
       </main>
     </>

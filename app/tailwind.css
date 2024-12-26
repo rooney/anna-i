@@ -108,9 +108,6 @@ header {
     @apply top-[8px] right-[50px] text-[20pt] p-[0_4px] border-[0_1px] border-solid border-gray-400;
   }
 }
-#submit {
-  @apply hidden;
-}
 .pop {
   transform: scale(0);
   transform-origin: top left;
