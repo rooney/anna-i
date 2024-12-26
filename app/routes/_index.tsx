@@ -113,7 +113,7 @@ export default function Index() {
   useEffect(() => {
     document.getElementById('greeting')!.removeAttribute('style');
     document.getElementById('translate-hint')!.style.transform = '';
-    const observer = new MutationObserver(() => {
+    const observer = new ResizeObserver(() => {
       if (document.body.scrollHeight > document.body.clientHeight) {
         if (document.body.clientWidth >= 740) {
           const
@@ -131,7 +131,7 @@ export default function Index() {
         observer.disconnect();
       }
     });
-    observer.observe(converse.current!, {childList: true})
+    observer.observe(converse.current!);
   }, []);
 
   return (
