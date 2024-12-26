@@ -33,6 +33,7 @@
       max-width: var(--item-size);
       max-height: var(--item-size);
       transition-duration: var(--transition-duration);
+      cursor: pointer;
     }
     > figcaption {
       font-size: 10pt;
@@ -41,6 +42,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       transition-duration: var(--transition-duration);
+      cursor: pointer;
     }
     &.zoom {
       > img {
