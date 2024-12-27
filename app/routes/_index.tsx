@@ -2,8 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { type MetaFunction } from "@remix-run/node";
 import { type Language, translations } from '~/translations';
 import { classes, isDesktop, randomBetween } from "~/utils";
-import { Spinner } from '~/components';
-import Products, { type Product, Showcase } from '~/components/products';
+import { Showcase, Spinner } from '~/components';
+import Products, { type Product } from '~/models/products';
 
 export const meta: MetaFunction = () => {
   return [
@@ -94,12 +94,10 @@ export default function Index() {
     }, randomBetween(1000, 3000));
   }
 
-  function flagLanguage(e: React.MouseEvent) {
-    const
-      target = e.target as HTMLElement,
-      parent = target.parentElement,
-      newLang = target.classList[1].slice(3,5) as Language;
-    parent!.parentElement!.removeChild(parent!);
+  function flagClicked(e: React.MouseEvent) {
+    const flag = e.currentTarget.querySelector('fi');
+    const newLang = flag?.classList[1].slice(3,5) as Language;
+    e.currentTarget.parentElement?.removeChild(e.currentTarget);
     if (lang !== newLang) {
       setLang(newLang);
       insertChats([{
@@ -156,8 +154,8 @@ export default function Index() {
           {chats.map((chat, index) => {
             if (typeof chat.what === 'string' && chat.what.toLowerCase() === 'translate') return (
               <div className="user translate" key={index}>
-                <div className="bubble hint flag">
-                  <a className="fi fi-jp" onClick={flagLanguage}/>
+                <div className="bubble hint flag" onClick={flagClicked}>
+                  <a className="fi fi-jp"/>
                 </div>
                 <div className="bubble user">{chat.what}</div>
               </div>

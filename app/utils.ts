@@ -34,7 +34,7 @@ export function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export function classes(...classNames: (string|boolean)[]) {
+export function classes(...classNames: (string|boolean|undefined|0)[]) {
   return classNames.filter((x) => x).join(' ');
 }
 

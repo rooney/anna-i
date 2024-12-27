@@ -1,8 +1,8 @@
 .showcase {
-  --item-size: 114px;
-  --zoom-size: 275px;
-  --unzoom-size: 70px;
-  --transition-duration: .25s;
+  --item-size: 100px;
+  --zoom-size: 200px;
+  --unzoom-size: 100px;
+  --transition-duration: .5s;
   margin: 9px -3px 0;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@
     }
     > figcaption {
       font-size: 10pt;
-      margin-bottom: 12px;
+      margin-bottom: 3px;
       text-align: center;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -50,8 +50,17 @@
         max-height: var(--zoom-size);
       }
       > figcaption {
-        font-size: 12pt;
+        font-size: 13pt;
       }
+    }
+  }
+  &.unzoom {
+    img {
+      max-width: var(--unzoom-size);
+      max-height: var(--unzoom-size);
+    }
+    figcaption {
+      font-size: 8pt;
     }
   }
 }
