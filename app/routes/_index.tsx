@@ -95,10 +95,10 @@ export default function Index() {
   }
 
   function flagClicked(e: React.MouseEvent) {
-    const flag = e.currentTarget.querySelector('fi');
+    const flag = e.currentTarget.querySelector('.fi');
     const newLang = flag?.classList[1].slice(3,5) as Language;
-    e.currentTarget.parentElement?.removeChild(e.currentTarget);
-    if (lang !== newLang) {
+    if (newLang && lang !== newLang) {
+      e.currentTarget.parentElement?.removeChild(e.currentTarget);
       setLang(newLang);
       insertChats([{
         who: `anna pop ${newLang}`, 

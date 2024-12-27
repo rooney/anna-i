@@ -72,10 +72,10 @@ header {
   @apply text-[16pt] font-jp;
 }
 .fi {
-  @apply border border-solid border-gray-500 cursor-pointer;
+  @apply border border-solid border-gray-500;
 }
 .flag {
-  @apply p-[8px] rounded-[14px] h-fit;
+  @apply p-[8px] rounded-[14px] h-fit cursor-pointer;
 }
 .translate {
   @apply flex gap-[8px];
