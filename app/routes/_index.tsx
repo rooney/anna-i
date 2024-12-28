@@ -4,6 +4,7 @@ import { type Language, translations } from '~/translations';
 import { classes, isDesktop, randomBetween } from "~/utils";
 import { Showcase, Spinner } from '~/components';
 import Products, { type Product } from '~/models/products';
+import { ShowcaseHandle } from '~/components/showcase';
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,9 +22,13 @@ export default function Index() {
     [lang, setLang] = useState<Language>('jp'),
     [chats, setChats] = useState<Chat[]>([]),
     [userInput, setUserInput] = useState<string>(''),
-    searchBar = useRef<HTMLFormElement>(null),
     searchBox = useRef<HTMLInputElement>(null),
-    converse = useRef<HTMLElement>(null);
+    searchBar = useRef<HTMLFormElement>(null),
+    converse = useRef<HTMLElement>(null),
+    showcases = useRef<ShowcaseHandle[]>([]),
+    addShowcase = (index: number) => (el: ShowcaseHandle) => {
+      showcases.current[index] = el!;
+    };
 
   function focusOnSearch() {
     searchBox.current?.focus();
@@ -81,7 +86,7 @@ export default function Index() {
               {translations[lang].formatNumber(products.length)}
               {translations[lang].nFound}
             </span>
-            <Showcase products={products} cols={3}/>
+            <Showcase className="Showcase" products={products} cols={3} ref={addShowcase(insert_pos)}/>
           </>,
         };
       })
@@ -95,8 +100,7 @@ export default function Index() {
   }
 
   function flagClicked(e: React.MouseEvent) {
-    const flag = e.currentTarget.querySelector('.fi');
-    const newLang = flag?.classList[1].slice(3,5) as Language;
+    const newLang = (e.currentTarget as HTMLElement).dataset.value as Language;
     if (newLang && lang !== newLang) {
       e.currentTarget.parentElement?.removeChild(e.currentTarget);
       setLang(newLang);
@@ -154,14 +158,15 @@ export default function Index() {
           {chats.map((chat, index) => {
             if (typeof chat.what === 'string' && chat.what.toLowerCase() === 'translate') return (
               <div className="user translate" key={index}>
-                <div className="bubble hint flag" onClick={flagClicked}>
+                <div className="bubble hint flag" data-value="jp" onClick={flagClicked}>
                   <a className="fi fi-jp"/>
                 </div>
                 <div className="bubble user">{chat.what}</div>
               </div>
             )
             return (
-              <div className={classes('bubble', chat.who, index === 1 && 'pop')} key={index}>
+              <div className={classes('bubble', chat.who, index === 1 && 'pop')} key={index}
+                onClick={(e) => showcases.current[index].handleClick(e)}>
                 {chat.what}
               </div>
             )

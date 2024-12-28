@@ -60,7 +60,7 @@ header {
   backdrop-filter: blur(5px);
 }
 .bubble.anna.showcase {
-  @apply pb-0;
+  @apply pb-0 cursor-default;
 }
 .bubble.anna.en {
   @apply pb-[11px] pr-[22px];

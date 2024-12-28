@@ -33,6 +33,7 @@
       max-width: var(--item-size);
       max-height: var(--item-size);
       transition-duration: var(--transition-duration);
+      transition-timing-function: ease-out;
       cursor: pointer;
     }
     > figcaption {
@@ -41,7 +42,6 @@
       text-align: center;
       text-overflow: ellipsis;
       overflow: hidden;
-      transition-duration: var(--transition-duration);
       cursor: pointer;
     }
     &.zoom {
@@ -49,18 +49,12 @@
         max-width: var(--zoom-size);
         max-height: var(--zoom-size);
       }
-      > figcaption {
-        font-size: 13pt;
-      }
     }
   }
   &.unzoom {
     img {
       max-width: var(--unzoom-size);
       max-height: var(--unzoom-size);
-    }
-    figcaption {
-      font-size: 8pt;
     }
   }
 }
