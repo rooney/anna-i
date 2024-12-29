@@ -34,12 +34,12 @@ export function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export function classes(...classNames: (string|boolean|undefined|0)[]) {
-  return classNames.filter((x) => x).join(' ');
+export function names(...names: (string|boolean|undefined|0)[]) {
+  return names.filter(x => x).join(' ');
 }
 
 export function isDesktop() {
   return window.matchMedia('(hover:hover)').matches;  
 }
 
-export default {classes, cssVar, cssIntVar, isDesktop, isFullyVisible, randomBetween};
+export default {classes: names, cssVar, cssIntVar, isDesktop, isFullyVisible, randomBetween};
