@@ -3,6 +3,3 @@
 html, body {
   @apply w-full h-full m-0 overflow-x-hidden;
 }
-body {
-  @apply bg-[url('/images/bg.jpg')] bg-cover bg-center;
-}

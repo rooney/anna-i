@@ -1,29 +1,35 @@
 .showcase {
   --item-size: 100px;
-  --transition-duration: .5s;
+  --transition-duration: .25s;
   overflow: hidden;
   > ul {
     padding: 0;
     margin: 0;
-    transition-duration: var(--transition-duration);
-    transform-origin: top left;
     > li {
       display: flex;
+      align-items: flex-end;
+      margin: 3px auto;
+      width: fit-content;
       gap: 2px;
+      transition-duration: var(--transition-duration);
       > figure {
         margin: 0;
-        > div {
-          width: var(--item-size);
-          height: var(--item-size);
-          display: flex;
-          align-items: flex-end;
+        transition-duration: var(--transition-duration);
+        max-width: var(--item-size);
+        &.zoom {
           > img {
-            display: block;
-            margin: 0 auto;
-            cursor: pointer;
-            max-width: var(--item-size);
-            max-height: var(--item-size);
+            transform: scale(2);
           }
+        }
+        > img {
+          display: block;
+          margin: 0 auto;
+          cursor: pointer;
+          max-width: var(--item-size);
+          max-height: var(--item-size);
+          user-select: none;
+          transition-duration: var(--transition-duration);
+          transform-origin: bottom center;
         }
         > figcaption {
           font-size: 10pt;

@@ -5,7 +5,7 @@
   --assistant-left: 15px;
 }
 body {
-  @apply break-keep en;
+  @apply bg-[url('/images/bg.jpg')] bg-cover bg-center break-keep en;
   > * {
    @apply w-full mx-auto max-w-[var(--max-chats-width)]
   }

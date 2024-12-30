@@ -155,12 +155,12 @@ export default() => {
             );
 
             if ('searchResult' in chat) return (
-              <div key={index} className="bubble anna showcase">
+              <div key={index} className="bubble anna showcase" onClick={(e) => showcases.current[index].handleClick(e)}>
                 <span className={lang}>
                   {translations[lang].formatNumber(chat.searchResult.length)}
                   {translations[lang].nFound}
                 </span>
-                <Showcase products={chat.searchResult} cols={3} ref={addShowcase(index)}/>
+                <Showcase products={chat.searchResult} cols={6} ref={addShowcase(index)}/>
               </div>
             );
 
