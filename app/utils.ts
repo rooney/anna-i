@@ -34,12 +34,18 @@ export function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export function names(...names: (string|boolean|undefined|0)[]) {
-  return names.filter(x => x).join(' ');
-}
-
 export function isDesktop() {
   return window.matchMedia('(hover:hover)').matches;  
 }
 
-export default {classes: names, cssVar, cssIntVar, isDesktop, isFullyVisible, randomBetween};
+export function offsetBetween(el: HTMLElement, el2: HTMLElement): { top: number; left: number } {
+  const rect = el.getBoundingClientRect();
+  const rect2 = el2.getBoundingClientRect();
+
+  return {
+    top: rect2.top - rect.top,
+    left: rect2.left - rect.left,
+  };
+}
+
+export default { cssVar, cssIntVar, isDesktop, isFullyVisible, offsetBetween, randomBetween };

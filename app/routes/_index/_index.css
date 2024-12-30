@@ -1,0 +1,115 @@
+:root {
+  --bubble-radius: 25px;
+  --max-chats-width: 625px;
+  --assistant-top: 10px;
+  --assistant-left: 15px;
+}
+body {
+  @apply break-keep en;
+  > * {
+   @apply w-full mx-auto max-w-[var(--max-chats-width)]
+  }
+  @apply justify-around flex flex-col;
+  @media (min-width:500px) {
+    justify-content: space-evenly;
+  }
+}
+header {
+  @apply flex flex-wrap-reverse;
+}
+#assistant, #sub {
+  @apply w-[175px] h-[263px] transition-transform duration-[.3s] ease-out origin-bottom-left;
+}
+#assistant {
+  @apply ml-[var(--assistant-left)] mt-[var(--assistant-top)];
+}
+#sub {
+  --assistant-shift: translateX(calc(var(--assistant-left) - var(--max-chats-width)/2));
+  @apply fixed left-[50%] top-[var(--assistant-top)] pointer-events-none;
+  transform: var(--assistant-shift);
+  &.peek {
+    transform: var(--assistant-shift) rotate(-20deg) translateX(-65px);
+    @apply duration-[3s] ease-in-out;
+  }
+}
+#greeting {
+  @apply m-[10px] rounded-bl-none rounded-tl-[var(--bubble-radius)] origin-bottom-left duration-500;
+}
+#converse {
+  > * {
+    @apply w-fit m-[10px];
+  }
+  > .user {
+    @apply ml-auto;
+  }
+}
+.bubble {
+  @apply rounded-[var(--bubble-radius)] bg-white bg-opacity-80 p-[9px_18px] max-w-[calc(100vw-49px)];
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+.bubble.user {
+  @apply rounded-br-none bg-[rgb(124,252,0)] bg-opacity-80;
+}
+.bubble.anna {
+  @apply rounded-tl-none;
+  backdrop-filter: blur(5px);
+}
+.bubble.anna.showcase {
+  @apply cursor-default;
+}
+.bubble.anna.en {
+  @apply pb-[11px] pr-[22px];
+}
+.en {
+  @apply text-[12pt] font-sans;
+}
+.jp {
+  @apply text-[16pt] font-jp;
+}
+.fi {
+  @apply border border-solid border-gray-500;
+}
+.flag {
+  @apply p-[8px] rounded-[14px] h-fit cursor-pointer;
+}
+.translate {
+  @apply flex gap-[8px];
+}
+.hint {
+  @apply border border-dashed border-black;
+}
+#translate-hint {
+  @apply ml-auto mr-[15px] w-fit delay-500 duration-200
+  text-blue-500 text-[11pt] underline cursor-pointer;
+}
+#search-bar {
+  @apply flex sticky max-w-[600px] m-[15px_auto_0] p-[0_5px] bottom-[5px];
+}
+#search-box {
+  @apply flex-grow min-w-0 border border-gray-500 rounded-[25px] text-[13pt] p-[10px_68px_9px_35px];
+}
+.material-symbols-outlined {
+  @apply absolute cursor-pointer;
+  &.search {
+    @apply top-[8px] left-[13px] text-[20pt] cursor-default;
+  }
+  &.mic {
+    @apply top-[8px] right-[5px] text-[23pt] pr-[5px] w-[40px] text-right;
+  }
+  &.send {
+    @apply top-[5px] right-[10px] text-[24pt];
+  }
+  &.photo-camera {
+    @apply top-[8px] right-[50px] text-[20pt] p-[0_4px] border-[0_1px] border-solid border-gray-400;
+  }
+}
+.pop {
+  transform: scale(0);
+  transform-origin: top left;
+  animation: popup 0.3s ease-out forwards;
+}
+@keyframes popup {
+  to {
+    transform: scale(1);
+  }
+}

@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { type MetaFunction } from "@remix-run/node";
-import { type Language, translations } from '~/locales/translations';
-import { names, isDesktop, randomBetween } from "~/utils";
+import { type MetaFunction } from '@remix-run/node';
+import { clsx } from 'clsx';
 import { Showcase, ShowcaseHandle, Spinner } from '~/components';
-import Products, { type Product } from '~/models/product';
+import { isDesktop, randomBetween } from '~/utils';
+import { type Language, translations } from '~/locales';
+import type { Chat, Product } from '~/models';
+import Products from '~/models/product';
+import './_index.css';
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,12 +14,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-type Chat = 
-  | { subject: string, matter: string | JSX.Element }
-  | { translate: string } 
-  | { searchResult: Product[] };
-
-export default function Index() {
+export default() => {
   const
     [lang, setLang] = useState<Language>('jp'),
     [chats, setChats] = useState<Chat[]>([]),
@@ -148,7 +146,7 @@ export default function Index() {
         <section id="converse" ref={converse}>
           {chats.map((chat, index) => {
             if ('translate' in chat) return (
-              <div key={index} className="user translate">
+              <div key={index} className="translate user">
                 <div className="bubble hint flag" data-value="jp" onClick={flagClicked}>
                   <a className="fi fi-jp"/>
                 </div>
@@ -157,7 +155,7 @@ export default function Index() {
             );
 
             if ('searchResult' in chat) return (
-              <div className="bubble anna showcase">
+              <div key={index} className="bubble anna showcase">
                 <span className={lang}>
                   {translations[lang].formatNumber(chat.searchResult.length)}
                   {translations[lang].nFound}
@@ -167,8 +165,7 @@ export default function Index() {
             );
 
             return (
-              <div key={index} className={names('bubble', chat.subject, index === 1 && 'pop')} 
-                onClick={e => showcases.current[index].handleClick(e)}>
+              <div key={index} className={clsx('bubble', chat.subject, index === 1 && 'pop')}>
                 {chat.matter}
               </div>
             );            
