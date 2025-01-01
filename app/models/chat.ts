@@ -2,5 +2,5 @@ import { Product } from "./product";
 
 export type Chat = 
   | { subject: string, matter: string | JSX.Element }
-  | { translate: string } 
+  | { translationRequest: string } 
   | { searchResult: Product[] };

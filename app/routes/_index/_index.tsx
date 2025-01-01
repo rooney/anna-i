@@ -93,7 +93,7 @@ export default() => {
     if (q.toLowerCase() === 'translate') {
       setLang('en');
       insertChats([ 
-        { translate: q }, 
+        { translationRequest: q }, 
         { subject: 'anna en pop', matter: translations.en.greeting }]);
       return isDesktop() && focusOnSearch();
     }
@@ -145,20 +145,22 @@ export default() => {
         </a>
         <section id="converse" ref={converse}>
           {chats.map((chat, index) => {
-            if ('translate' in chat) return (
+            if ('translationRequest' in chat) return (
               <div key={index} className="translate user">
                 <div className="bubble hint flag" data-value="jp" onClick={flagClicked}>
                   <a className="fi fi-jp"/>
                 </div>
-                <div className="bubble user">{chat.translate}</div>
+                <div className="bubble user">{chat.translationRequest}</div>
               </div>
             );
 
             if ('searchResult' in chat) return (
               <div key={index} className="bubble anna showcase" onClick={(e) => showcases.current[index].handleClick(e)}>
                 <span className={lang}>
-                  {translations[lang].formatNumber(chat.searchResult.length)}
-                  {translations[lang].nFound}
+                  {chat.searchResult.length > 1 && <>
+                    {translations[lang].formatNumber(chat.searchResult.length)}
+                    {translations[lang].nFound}
+                  </>}
                 </span>
                 <Showcase products={chat.searchResult} cols={6} ref={addShowcase(index)}/>
               </div>

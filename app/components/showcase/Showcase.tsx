@@ -44,7 +44,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
     }}>
       <ul ref={zoomer}>
         {Array.from({ length: numRows }, (_, r) => {
-          const isTopRow = numRows > 1 && r === 0;
+          const isTopRow = r === 0;
           return (
             <li key={r} ref={addRow(r)}>
               {Array.from({ length: cols }, (_, c) => {
