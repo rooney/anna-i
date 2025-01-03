@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, Suspense, useImperativeHandle, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { translateX_of } from '~/utils';
 import { type Product } from '~/models/product';
@@ -65,7 +65,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
                   row.style.transform = 'translateY(-15px)'
                 );
                 rows.current.slice(r+1).forEach(row =>  // move rows-below downward
-                  row.style.transform = 'translateY(25px)'
+                  row.style.transform = 'translateY(20px)'
                 );
                 rows.current[r].removeAttribute('style');
                 
@@ -81,15 +81,15 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
                 figures.current.slice(i+1, Math.min(r*cols+cols, products.length)).forEach(fig => // push right all items on the right
                   fig.style.transform = `translateX(${dl + img.width*.5}px)`
                 );
-                figures.current[i].style.transform = `translateX(${dl||dr}px) translateY(25px)`;
-                figures.current[i].style.zIndex = '1';
+                fig.style.transform = `translateX(${dl||dr}px) translateY(25px)`;
+                fig.style.zIndex = '1';
                 setFocus(i);
               }
               return item && (
                 <figure key={c} ref={addFigure(i)} className={clsx(focus === i && css.zoom)}>
                   <img src={item.image} onClick={toggleFocus}/>
                   <figcaption onClick={toggleFocus}>
-                    <a>{item.name.replace(/ /g, '\u00A0')}</a>
+                    {item.name.replace(/ /g, '\u00A0')}
                   </figcaption>
                 </figure>
               );

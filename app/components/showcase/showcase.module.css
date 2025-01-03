@@ -14,25 +14,20 @@
     > figure {
       margin: 0;
       transition: var(--transition-duration) transform;
-      max-width: var(--item-size);
+      max-width: 100px;
       &.zoom {
         > img {
           transform: scale(2.8);
-          box-shadow: 0 -1px 5px 0px black
+          box-shadow: 0 -1px 5px 0px black;
         }
         > figcaption {
           @apply text-blue-600;
-          font-size: 10pt;
           text-decoration: underline;
           font-weight: 500;
           cursor: pointer;
-          width: 250px;
+          width: 200px;
           position: relative;
-          left: -75px;
-          > a:active {
-            @apply bg-[rgb(124,252,0)];
-            color: black;
-          }
+          left: -50px;
         }
       }
       > img {
@@ -44,6 +39,8 @@
         user-select: none;
         transition: var(--transition-duration) transform;
         transform-origin: bottom center;
+        min-width: 60px;
+        min-height: 60px;
       }
       > figcaption {
         margin-top: 5px;

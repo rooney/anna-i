@@ -1,8 +1,9 @@
 :root {
+  --assistant-left: 15px;
+  --assistant-top: 10px;
+  --bubble-green: rgb(124,252,0);
   --bubble-radius: 25px;
   --max-chats-width: 625px;
-  --assistant-top: 10px;
-  --assistant-left: 15px;
 }
 body {
   @apply bg-[url('/images/bg.jpg')] bg-cover bg-center break-keep en;
@@ -48,17 +49,15 @@ header {
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 .bubble.user {
-  @apply rounded-br-none bg-[rgb(124,252,0)] bg-opacity-80;
+  @apply rounded-br-none bg-[var(--bubble-green)] bg-opacity-80;
 }
 .bubble.anna {
   @apply rounded-tl-none;
   backdrop-filter: blur(5px);
 }
 .bubble.anna.showcase {
-  @apply cursor-default;
+  @apply cursor-default pt-5 pb-[17px];
   overflow-x: clip;
-  padding-top: 15px;
-  padding-bottom: 15px;
 }
 .bubble.anna.en {
   @apply pb-[11px] pr-[22px];
