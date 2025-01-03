@@ -14,13 +14,13 @@ export interface TRect extends DOMRect {
   translateY: number,
 }
 
-export function cssVar(varname: string): string {
-  return getComputedStyle(document.documentElement).getPropertyValue(varname);
+export function cssVar(varname: string, el: HTMLElement = document.documentElement): string {
+  return getComputedStyle(el).getPropertyValue(varname);
 }
 
-export function cssIntVar(varname: string, defaultValue?: number): number {
-  const value = parseInt(cssVar(varname));
-  return isNaN(value) && defaultValue ? defaultValue : value;
+export function cssIntVar(varname: string, el: HTMLElement = document.documentElement): number|undefined {
+  const value = parseFloat(cssVar(varname, el));
+  return isNaN(value) ? undefined : value;
 }
 
 export function isDesktop(): boolean {

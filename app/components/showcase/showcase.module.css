@@ -1,43 +1,57 @@
 .showcase {
   --item-size: 100px;
   --transition-duration: .25s;
-  overflow: hidden;
-  > ul {
-    padding: 0;
-    margin: 0;
-    > li {
-      display: flex;
-      align-items: flex-end;
-      margin: 3px auto;
-      width: fit-content;
-      gap: 2px;
-      transition-duration: var(--transition-duration);
-      > figure {
-        margin: 0;
-        transition-duration: var(--transition-duration);
-        max-width: var(--item-size);
-        &.zoom {
-          > img {
-            transform: scale(2);
-          }
-        }
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+  > li {
+    display: flex;
+    align-items: flex-end;
+    margin: 15px auto;
+    width: fit-content;
+    gap: 5px;
+    transition: var(--transition-duration) transform;
+    > figure {
+      margin: 0;
+      transition: var(--transition-duration) transform;
+      max-width: var(--item-size);
+      &.zoom {
         > img {
-          display: block;
-          margin: 0 auto;
-          cursor: pointer;
-          max-width: var(--item-size);
-          max-height: var(--item-size);
-          user-select: none;
-          transition-duration: var(--transition-duration);
-          transform-origin: bottom center;
+          transform: scale(2.8);
+          box-shadow: 0 -1px 5px 0px black
         }
         > figcaption {
+          @apply text-blue-600;
           font-size: 10pt;
-          text-overflow: ellipsis;
-          overflow: hidden;
+          text-decoration: underline;
+          font-weight: 500;
           cursor: pointer;
-          text-align: center;
+          width: 250px;
+          position: relative;
+          left: -75px;
+          > a:active {
+            @apply bg-[rgb(124,252,0)];
+            color: black;
+          }
         }
+      }
+      > img {
+        display: block;
+        margin: 0 auto;
+        cursor: default;
+        max-width: var(--item-size);
+        max-height: var(--item-size);
+        user-select: none;
+        transition: var(--transition-duration) transform;
+        transform-origin: bottom center;
+      }
+      > figcaption {
+        margin-top: 5px;
+        font-size: 9pt;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: default;
+        text-align: center;
       }
     }
   }

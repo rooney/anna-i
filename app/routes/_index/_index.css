@@ -56,6 +56,9 @@ header {
 }
 .bubble.anna.showcase {
   @apply cursor-default;
+  overflow-x: clip;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 .bubble.anna.en {
   @apply pb-[11px] pr-[22px];
