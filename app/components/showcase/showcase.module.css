@@ -15,6 +15,24 @@
       margin: 0;
       transition: var(--transition-duration) transform;
       max-width: 100px;
+      > img {
+        display: block;
+        margin: 0 auto;
+        cursor: default;
+        max-width: var(--item-size);
+        max-height: var(--item-size);
+        user-select: none;
+        transition: var(--transition-duration) transform;
+        transform-origin: bottom center;
+      }
+      > figcaption {
+        margin-top: 4px;
+        font-size: 9pt;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: default;
+        text-align: center;
+      }
       &.zoom {
         > img {
           transform: scale(2.8);
@@ -30,26 +48,12 @@
           left: -50px;
         }
       }
-      > img {
-        display: block;
-        margin: 0 auto;
-        cursor: default;
-        max-width: var(--item-size);
-        max-height: var(--item-size);
-        user-select: none;
-        transition: var(--transition-duration) transform;
-        transform-origin: bottom center;
-        min-width: 60px;
-        min-height: 60px;
-      }
-      > figcaption {
-        margin-top: 5px;
-        font-size: 9pt;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        cursor: default;
-        text-align: center;
-      }
     }
   }
+}
+.rowup {
+  transform: translateY(-15px);
+}
+.rowdown {
+  transform: translateY(20px);
 }

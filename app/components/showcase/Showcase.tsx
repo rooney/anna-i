@@ -1,4 +1,4 @@
-import React, { forwardRef, Suspense, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { clsx } from 'clsx';
 import { translateX_of } from '~/utils';
 import { type Product } from '~/models/product';
@@ -16,32 +16,71 @@ export interface ShowcaseHandle extends HTMLUListElement {
 
 export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, cols, onClick, className, ...props}, ref) => {  
   const
-    [focus, setFocus] = useState<number|undefined>(),
     showcase = useRef<HTMLUListElement>(null),
     figures = useRef<HTMLElement[]>([]),
+    focus = useRef<number>(),
     rows = useRef<HTMLLIElement[]>([]),
     numRows = Math.ceil(products.length / cols),
     addRow = (i: number) => (el: HTMLLIElement) => rows.current[i] = el,
-    addFigure = (index: number) => (el: HTMLElement) => figures.current[index] = el;
-  
-  function setNoFocus() {
-    if (focus === undefined) return;
-    rows.current.forEach(row => row.style.transform = '');
-    figures.current.forEach(fig => fig.style.transform = '');
-    setTimeout(() => {
-      figures.current[focus].removeAttribute('style');
-    }, 300);
-    return setFocus(undefined);
-  }
+    addFigure = (index: number) => (el: HTMLElement) => figures.current[index] = el,
+    addImage = (img: HTMLImageElement) => observer.observe(img),
+    pending = useRef<number>(products.length),
+    observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        console.log(entry.contentRect);
+        if (entry.contentRect.height) {
+          if (!--pending.current) {
+            observer.disconnect();
+          }
+        }
+      }
+    });
 
   function handleClick(e: React.MouseEvent<HTMLElement>) {
     const target = (e.target as HTMLElement);
     if (showcase.current?.contains(target) && target.matches('img, figcaption')) return;
-    setNoFocus();
+    unfocus();
   }
 
+  function rowup(row: HTMLLIElement) {
+    row.classList.add(css.rowup);
+    row.classList.remove(css.rowdown);
+  }
+
+  function rowdown(row: HTMLLIElement) {
+    row.classList.add(css.rowdown);
+    row.classList.remove(css.rowup);
+  }
+
+  function rowback(row: HTMLLIElement) {
+    row.classList.remove(css.rowup, css.rowdown);
+  }
+
+  function unfocus() {
+    unzoom();
+    rows.current.forEach(rowback);
+    focus.current = undefined;
+  }
+
+  function unzoom() {
+    const zoomed = focus.current;
+    if (zoomed === undefined) return;
+
+    const
+      zoomedFig = figures.current[zoomed],
+      zoomedRow = Math.floor(zoomed/cols),
+      figuresInZoomedRow = figures.current.slice(zoomedRow*cols, zoomedRow*cols + cols);
+      
+    figuresInZoomedRow.forEach(el => el.removeAttribute('style'));
+    zoomedFig.classList.remove(css.zoom);
+    zoomedFig.style.zIndex = '1';
+    setTimeout(() =>  // wait until the animation ends before clearing the z-index
+      zoomedFig.style.zIndex = ''
+    , 125);
+  }
+  
   useImperativeHandle(ref, () => ({ ...showcase.current!, handleClick }));
-  return (
+  return useMemo(() =>
     <ul ref={showcase} {...props} className={clsx(className, css.showcase)} onClick={(e) => {
       if (onClick) onClick(e);
       if (!e.defaultPrevented) handleClick(e);
@@ -50,46 +89,43 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
         return (
           <li key={r} ref={addRow(r)}>
             {Array.from({ length: cols }, (_, c) => {
-              const i = r*cols + c, item = products[i];
+              const
+                i = r*cols + c,
+                item = products[i];
+
               function toggleFocus() {
-                if (focus === i) return setNoFocus();
+                const zoomed = focus.current;
+                if (zoomed === i) return unfocus();
+                if (zoomed !== undefined) unzoom();
                 const
-                  sc = showcase.current!.getBoundingClientRect(),
                   fig = figures.current[i],
+                  showcaseRect = showcase.current!.getBoundingClientRect(),
+                  imgRect = (fig.firstChild as HTMLImageElement).getBoundingClientRect(),
                   nudge = translateX_of(fig),
-                  img = (fig.firstChild as HTMLElement).getBoundingClientRect(),
-                  dl = Math.max(sc.left - img.left + nudge + img.width*.85, 0), // amount of left-side clipping after scaling
-                  dr = Math.min(sc.right - img.right + nudge - img.width*.85, 0); // same, for right-side
+                  leftClip = Math.max(showcaseRect.left - imgRect.left + nudge + imgRect.width*.85, 0),
+                  rightClip = Math.min(showcaseRect.right - imgRect.right + nudge - imgRect.width*.85, 0);
                   
-                rows.current.slice(0, r).forEach(row => // move rows-above upward
-                  row.style.transform = 'translateY(-15px)'
-                );
-                rows.current.slice(r+1).forEach(row =>  // move rows-below downward
-                  row.style.transform = 'translateY(20px)'
-                );
-                rows.current[r].removeAttribute('style');
+                rows.current.slice(0, r).forEach(rowup);
+                rows.current.slice(r+1).forEach(rowdown);
+                rowback(rows.current[r]);
                 
-                if (focus !== undefined) { // clear all transformations of previous focus
-                  const focusRow = Math.floor(focus/cols);
-                  figures.current.slice(focusRow*cols, focusRow*cols + cols).forEach(fig => 
-                    fig.removeAttribute('style')
-                  );
-                }
                 figures.current.slice(r*cols, i).forEach(fig => // push left all items on the left
-                  fig.style.transform = `translateX(${dr - img.width*.5}px)`
+                  fig.style.transform = `translateX(${rightClip - imgRect.width*.5}px)`
                 );
                 figures.current.slice(i+1, Math.min(r*cols+cols, products.length)).forEach(fig => // push right all items on the right
-                  fig.style.transform = `translateX(${dl + img.width*.5}px)`
+                  fig.style.transform = `translateX(${leftClip + imgRect.width*.5}px)`
                 );
-                fig.style.transform = `translateX(${dl||dr}px) translateY(25px)`;
+
+                fig.classList.add(css.zoom);
+                fig.style.transform = `translateX(${leftClip || rightClip}px) translateY(25px)`;
                 fig.style.zIndex = '1';
-                setFocus(i);
+                focus.current = i;
               }
               return item && (
-                <figure key={c} ref={addFigure(i)} className={clsx(focus === i && css.zoom)}>
-                  <img src={item.image} onClick={toggleFocus}/>
+                <figure key={c} ref={addFigure(i)}>
+                  <img ref={addImage} src={item.image} onClick={toggleFocus}/>
                   <figcaption onClick={toggleFocus}>
-                    {item.name.replace(/ /g, '\u00A0')}
+                    {item.name.replace(/ /g, '\u00A0').replace(/-/g, '\u2011')}
                   </figcaption>
                 </figure>
               );
@@ -98,7 +134,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
         )
       })}
     </ul>
-  );
+  , products);
 });
 
 export default Showcase;
