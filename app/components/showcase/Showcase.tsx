@@ -29,6 +29,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
       for (const entry of entries) {
         console.log(entry.contentRect);
         if (entry.contentRect.height) {
+          entry.target.parentElement!.style.width = entry.contentRect.width + 'px';
           if (!--pending.current) {
             observer.disconnect();
           }
@@ -71,10 +72,10 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
       zoomedRow = Math.floor(zoomed/cols),
       figuresInZoomedRow = figures.current.slice(zoomedRow*cols, zoomedRow*cols + cols);
       
-    figuresInZoomedRow.forEach(el => el.removeAttribute('style'));
+    figuresInZoomedRow.forEach(el => el.style.transform = '');
     zoomedFig.classList.remove(css.zoom);
     zoomedFig.style.zIndex = '1';
-    setTimeout(() =>  // wait until the animation ends before clearing the z-index
+    setTimeout(() =>  // wait until the animation is halfway before clearing the z-index
       zoomedFig.style.zIndex = ''
     , 125);
   }

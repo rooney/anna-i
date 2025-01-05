@@ -32,6 +32,10 @@
         overflow: hidden;
         cursor: default;
         text-align: center;
+        width: 100%;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
       }
       &.zoom {
         > img {
@@ -43,9 +47,7 @@
           text-decoration: underline;
           font-weight: 500;
           cursor: pointer;
-          width: 200px;
-          position: relative;
-          left: -50px;
+          width: 200%;
         }
       }
     }
