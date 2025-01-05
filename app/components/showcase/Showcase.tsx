@@ -14,7 +14,7 @@ export interface ShowcaseHandle extends HTMLUListElement {
 }
 
 
-export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, cols, onClick, className, ...props}, ref) => {  
+export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, cols, onClick, className, ...props}, ref) => {
   const
     showcase = useRef<HTMLUListElement>(null),
     figures = useRef<HTMLElement[]>([]),
@@ -23,11 +23,10 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
     numRows = Math.ceil(products.length / cols),
     addRow = (i: number) => (el: HTMLLIElement) => rows.current[i] = el,
     addFigure = (index: number) => (el: HTMLElement) => figures.current[index] = el,
-    addImage = (img: HTMLImageElement) => observer.observe(img),
+    addImage = (img: HTMLImageElement) => img && observer.observe(img),
     pending = useRef<number>(products.length),
     observer = new ResizeObserver(entries => {
       for (const entry of entries) {
-        console.log(entry.contentRect);
         if (entry.contentRect.height) {
           entry.target.parentElement!.style.width = entry.contentRect.width + 'px';
           if (!--pending.current) {
@@ -135,7 +134,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, co
         )
       })}
     </ul>
-  , products);
+  , [products, cols]);
 });
 
 export default Showcase;

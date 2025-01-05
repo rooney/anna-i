@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { type MetaFunction } from '@remix-run/node';
 import { clsx } from 'clsx';
 import { Showcase, ShowcaseHandle, Spinner } from '~/components';
-import { isDesktop, randomBetween } from '~/utils';
+import { hasScrollbarY, isDesktop, randomBetween } from '~/utils';
 import { type Language, translations } from '~/locales';
 import type { Chat, Product } from '~/models';
 import Products from '~/models/product';
@@ -16,53 +16,45 @@ export const meta: MetaFunction = () => {
 
 export default() => {
   const
+    [ready, setReady] = useState<boolean>(false),
     [lang, setLang] = useState<Language>('jp'),
     [chats, setChats] = useState<Chat[]>([]),
     [userInput, setUserInput] = useState<string>(''),
-    searchBox = useRef<HTMLInputElement>(null),
-    searchBar = useRef<HTMLFormElement>(null),
+    [scrollTop, setScrollTop] = useState<number>(0),
+    [windowWidth, setWindowWidth] = useState<number>(typeof window === 'undefined' ? 0 : window.innerWidth),
+    [hasVScrollbar, setHasVScrollbar] = useState<boolean>(false),
+    [isSubassist, setSubassist] = useState<boolean>(false),
+    [isPeeking, setPeeking] = useState<boolean>(false),
     converse = useRef<HTMLElement>(null),
+    searchBox = useRef<HTMLInputElement>(null),
     showcases = useRef<ShowcaseHandle[]>([]),
     addShowcase = (index: number) => (el: ShowcaseHandle) => {
       showcases.current[index] = el!;
     };
 
+  useEffect(() => setSubassist(hasVScrollbar && windowWidth >= 768), [hasVScrollbar, windowWidth]);
+  useEffect(() => setPeeking(isSubassist && scrollTop > 265), [isSubassist, scrollTop]);
+  useEffect(() => setHasVScrollbar(hasScrollbarY(document.body)), [chats]);
   useEffect(() => {
-    document.getElementById('greeting')!.removeAttribute('style');
-    document.getElementById('translate-hint')!.style.transform = '';
-    const observer = new ResizeObserver(() => {
-      if (document.body.scrollHeight > document.body.clientHeight) {
-        if (document.body.clientWidth >= 740) {
-          const
-            assistant = document.getElementById('assistant'),
-            sub = document.getElementById('sub');
-
-          assistant!.style.visibility = 'hidden';
-          sub!.classList.remove('hidden');
-
-          document.body.addEventListener('scroll', () => {
-            document.body.scrollTop > 265 ?
-              sub!.classList.add('peek') :
-              sub!.classList.remove('peek');
-          });
-        }
-        observer.disconnect();
-      }
-    });
-    observer.observe(converse.current!);
-  }, []);
-  
-  function flagClicked(e: React.MouseEvent) {
-    const newLang = (e.currentTarget as HTMLElement).dataset.value as Language;
-    if (newLang && lang !== newLang) {
-      e.currentTarget.parentElement?.removeChild(e.currentTarget);
-      setLang(newLang);
-      insertChats([{
-        subject: `anna pop ${newLang}`, 
-        matter: translations[newLang].greeting,
-      }]);
-      isDesktop() && focusOnSearch();
+    window.addEventListener('resize', onWindowResize);
+    document.body.addEventListener('scroll', onBodyScroll);
+    setReady(true);
+    return () => {
+      window.removeEventListener('resize', onWindowResize);
+      document.body.removeEventListener('scroll', onBodyScroll);
     }
+  }, []);
+
+  let debounceOBS: NodeJS.Timeout
+  function onBodyScroll() {
+    clearTimeout(debounceOBS);
+    debounceOBS = setTimeout(() => setScrollTop(document.body.scrollTop), 100);
+  }
+  
+  let debounceOWR: NodeJS.Timeout;
+  function onWindowResize() {
+    clearTimeout(debounceOWR);
+    debounceOWR = setTimeout(() => setWindowWidth(window.innerWidth), 100);
   }
   
   function focusOnSearch() {
@@ -86,6 +78,25 @@ export default() => {
     e.preventDefault();
     send(userInput);
     setUserInput('');
+  }
+
+  function calcCols(numProducts: number) {
+    const numCols = Math.floor((windowWidth - 45) / 105);
+    const numRows = Math.ceil(numProducts / numCols);
+    return Math.min(6, Math.ceil(numProducts / numRows));
+  }
+
+  function flagClicked(e: React.MouseEvent) {
+    const newLang = (e.currentTarget as HTMLElement).dataset.value as Language;
+    if (newLang && lang !== newLang) {
+      e.currentTarget.parentElement?.removeChild(e.currentTarget);
+      setLang(newLang);
+      insertChats([{
+        subject: `anna pop ${newLang}`, 
+        matter: translations[newLang].greeting,
+      }]);
+      isDesktop() && focusOnSearch();
+    }
   }
 
   function send(q: string) {
@@ -128,19 +139,19 @@ export default() => {
   return (
     <>
       <header>
-        <img src="/images/penguin.png" id="assistant"/>
-        <img src="/images/penguin.png" id="sub" className="hidden"/>
+        <img src="/images/penguin.png" id="assistant" className={clsx(isSubassist && "invisible")}/>
+        <img src="/images/penguin.png" id="sub"
+          className={clsx(!isSubassist && "hidden", isPeeking && "peek")}
+        />
         <section>
-          <div id="greeting" className="bubble anna jp" style={{ transform: 'scale(0)' }}>
+          <div id="greeting" className={clsx("bubble anna jp", !ready && "shrink")}>
             {translations.jp.greeting}
           </div>
         </section>
       </header>
       <main>
-        <a id="translate-hint" className="bubble hint" onClick={() => send('Translate')} style={{
-          display: chats.length ? 'none' : 'block',
-          transform: 'scale(0)',
-        }}>
+        <a id="translate-hint" onClick={() => send('Translate')}
+          className={clsx("bubble hint block", !ready && "shrink", chats.length && "hidden")}>
           Translate?
         </a>
         <section id="converse" ref={converse}>
@@ -162,7 +173,7 @@ export default() => {
                     {translations[lang].nFound}
                   </>}
                 </span>
-                <Showcase products={chat.searchResult} cols={6} ref={addShowcase(index)}/>
+                <Showcase ref={addShowcase(index)} products={chat.searchResult} cols={calcCols(chat.searchResult.length)}/>
               </div>
             );
 
@@ -173,7 +184,7 @@ export default() => {
             );            
           })}
         </section>
-        <form id="search-bar" ref={searchBar} onSubmit={submit}>
+        <form id="search-bar" onSubmit={submit}>
           <input id="search-box" ref={searchBox} onInput={e => setUserInput((e.target as HTMLInputElement).value)}
             type="text" autoComplete="off" value={userInput} placeholder={translations[lang].searchHint}/>
           <span className="material-symbols-outlined search" onClick={focusOnSearch}>&#xe8b6;</span>

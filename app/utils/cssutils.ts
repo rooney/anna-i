@@ -1,6 +1,9 @@
 export default {
     cssVar,
     cssIntVar,
+    hasScrollbar,
+    hasScrollbarX,
+    hasScrollbarY,
     isDesktop,
     isFullyVisible,
     tMatrix_of,
@@ -21,6 +24,18 @@ export function cssVar(varname: string, el: HTMLElement = document.documentEleme
 export function cssIntVar(varname: string, el: HTMLElement = document.documentElement): number|undefined {
   const value = parseFloat(cssVar(varname, el));
   return isNaN(value) ? undefined : value;
+}
+
+export function hasScrollbar(el: HTMLElement) {
+  return hasScrollbarX(el) || hasScrollbarY(el);  
+}
+
+export function hasScrollbarX(el: HTMLElement) {
+  return el.scrollWidth > el.clientWidth;  
+}
+
+export function hasScrollbarY(el: HTMLElement) {
+  return el.scrollHeight > el.clientHeight;  
 }
 
 export function isDesktop(): boolean {
