@@ -80,12 +80,6 @@ export default() => {
     setUserInput('');
   }
 
-  function calcCols(numProducts: number) {
-    const numCols = Math.floor((windowWidth - 45) / 105);
-    const numRows = Math.ceil(numProducts / numCols);
-    return Math.min(6, Math.ceil(numProducts / numRows));
-  }
-
   function flagClicked(e: React.MouseEvent) {
     const newLang = (e.currentTarget as HTMLElement).dataset.value as Language;
     if (newLang && lang !== newLang) {
@@ -173,7 +167,7 @@ export default() => {
                     {translations[lang].nFound}
                   </>}
                 </span>
-                <Showcase ref={addShowcase(index)} products={chat.searchResult} cols={calcCols(chat.searchResult.length)}/>
+                <Showcase ref={addShowcase(index)} products={chat.searchResult}/>
               </div>
             );
 

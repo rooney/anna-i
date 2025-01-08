@@ -1,6 +1,10 @@
 export type Product = {
   name: string;
-  image: string;
+  image: {
+    src: string;
+    width: number;
+    height: number;
+  };
 }
 
 export async function lookup(query:string) {
@@ -10,7 +14,7 @@ export async function lookup(query:string) {
   }
   const products = await response.json();
   return products.map((item: Product) => {
-    item.image = import.meta.env.VITE_BACKEND + item.image;
+    item.image.src = import.meta.env.VITE_BACKEND + item.image.src;
     return item;
   });
 }

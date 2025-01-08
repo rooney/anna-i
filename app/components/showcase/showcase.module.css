@@ -1,61 +1,90 @@
 .showcase {
-  --item-size: 100px;
-  --transition-duration: .25s;
-  padding: 0;
-  margin: 0;
-  margin-top: 15px;
-  > li {
-    display: flex;
-    align-items: flex-end;
-    margin: 15px auto;
-    width: fit-content;
-    gap: 5px;
-    transition: var(--transition-duration) transform;
-    > figure {
-      margin: 0;
-      transition: var(--transition-duration) transform;
-      max-width: 100px;
-      > img {
-        display: block;
-        margin: 0 auto;
-        cursor: default;
-        max-width: var(--item-size);
-        max-height: var(--item-size);
-        user-select: none;
-        transition: var(--transition-duration) transform;
-        transform-origin: bottom center;
-      }
-      > figcaption {
-        margin-top: 4px;
-        font-size: 9pt;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        cursor: default;
-        text-align: center;
-        width: 100%;
-        position: relative;
-        left: 50%;
-        transform: translate(-50%);
-      }
-      &.zoom {
-        > img {
-          transform: scale(2.8);
-          box-shadow: 0 -1px 5px 0px black;
-        }
-        > figcaption {
-          @apply text-blue-600;
-          text-decoration: underline;
-          font-weight: 500;
-          cursor: pointer;
-          width: 200%;
-        }
-      }
-    }
+  --x-push: 90px;
+  --x-push-hanging: 37.5px;
+  @media(max-width: 355px) {
+    --x-push: 52px;
   }
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  align-items: end;
+  margin-block-start: 16px;
+  padding: 0;
+  li {
+    display: block;
+    width: fit-content;
+    height: fit-content;
+  }
+  figure {
+    @apply trans limit-width;
+    margin: 0;
+    position: relative;
+  }
+  figcaption {
+    text-align: center;
+    font-size: 9pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  img {
+    @apply trans limit-width;
+    display: block;
+    transform-origin: bottom center;
+  }  
 }
-.rowup {
-  transform: translateY(-15px);
+.leftward {
+  transform: translateX(-60px);
 }
-.rowdown {
+.rightward {
+  transform: translateX(60px);
+}
+.leftward.edge {
+  transform: translateX(calc(-25px - (var(--x-push))));
+}
+.rightward.edge {
+  transform: translateX(calc(25px + (var(--x-push))));
+}
+.leftward.edge.hanging {
+  transform: translateX(calc(-25px - (var(--x-push-hanging))));
+}
+.rightward.edge.hanging {
+  transform: translateX(calc(25px + (var(--x-push-hanging))));
+}
+.upward {
+  transform: translateY(-20px);
+}
+.downward {
   transform: translateY(20px);
 }
+.inward {
+  z-index: 1;
+}
+.outward {
+  z-index: 2;
+  img {
+    transform: scale(2.8);
+  }
+  --down: translateY(20px);
+  transform: var(--down);
+  &.leading {
+    transform: var(--down) translateX(var(--x-push));
+  }
+  &.trailing {
+    transform: var(--down) translateX(calc(0px - (var(--x-push))));
+  }
+  &.leading.hanging {
+    transform: var(--down) translateX(var(--x-push-hanging));
+  }
+  &.trailing.hanging {
+    transform: var(--down) translateX(calc(0px - (var(--x-push-hanging))));
+  }
+}
+.limit-width {
+  max-width: 100px;
+}
+.trans {
+  transition: .25s transform;
+}
+

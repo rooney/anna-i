@@ -3,7 +3,7 @@
   --assistant-top: 10px;
   --bubble-green: rgb(124,252,0);
   --bubble-radius: 25px;
-  --max-chats-width: 680px;
+  --max-chats-width: 681px;
 }
 body {
   @apply bg-[url('/images/bg.jpg')] bg-cover bg-center break-keep en;
