@@ -18,43 +18,46 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
     [focus, setFocus] = useState<number>(-1),
     [unfocus, setUnfocus] = useState<number>(-1),
     [numCols, setNumCols] = useState<number>(1),
-    numRows = Math.ceil(products.length / numCols),
-    lastIndex = products.length - 1,
-    hasFocus = focus > -1,
-    focusRow = Math.floor(focus / numCols),
-    focusCol = hasFocus ? focus - (focusRow * numCols) : -1,
-    isFocusFirstCol = focusCol === 0,
-    isFocusLastCol = focusCol === numCols - 1 || focus === lastIndex,
-    isFocusAtEdge = isFocusFirstCol || isFocusLastCol,
-    isLastRowHanging = products.length < numRows * numCols,
     windowWidth = useWindowWidth();
 
-  useEffect(() => {
-    const
-      showcaseWidth = showcase.current!.getBoundingClientRect().width,
-      deficit = Math.min(0, showcaseWidth - 280),
-      numCols = Math.floor((showcaseWidth + 5) / 105),
-      numColsHanging = products.length % numCols,
-      usedWidth        = numCols * 105 - 5,
-      usedWidthHanging = numColsHanging * 105 - 5,
-      unusedWidth        = showcaseWidth - deficit - usedWidth,
-      unusedWidthHanging = showcaseWidth - deficit - usedWidthHanging,
-      xPush        = Math.max(0, 90 - unusedWidth/2),
-      xPushHanging = Math.max(0, 90 - unusedWidthHanging/2);
+    useEffect(() => {
+      const
+        showcaseWidth = Math.max(280, showcase.current!.getBoundingClientRect().width),
+        numCols = Math.floor((showcaseWidth + 5) / 105),
+        numColsHanging = products.length % numCols,
+        usedWidth        = 105 * numCols - 5,
+        usedWidthHanging = 105 * numColsHanging - 5,
+        unusedWidth        = showcaseWidth - usedWidth,
+        unusedWidthHanging = showcaseWidth - usedWidthHanging,
+        xPush        = Math.max(0, 90 - unusedWidth/2),
+        xPushHanging = Math.max(0, 90 - unusedWidthHanging/2),
+        style = showcase.current!.style;
 
-    showcase.current!.style.setProperty('--x-push', `${xPush}px`);
-    showcase.current!.style.setProperty('--x-push-hanging', `${xPushHanging}px`);
-    setNumCols(numCols);
-  }, [windowWidth]);
+      style.setProperty('--x-push', `${xPush}px`);
+      style.setProperty('--x-push-hanging', `${xPushHanging}px`);
+      setNumCols(numCols);
+    }, [windowWidth]);
 
   function handleClick(e: React.MouseEvent<HTMLElement>) {
     const target = (e.target as HTMLElement);
     if (showcase.current?.contains(target) && target.matches('img, figcaption')) return;
     setFocus(-1);
   }
+
   useImperativeHandle(ref, () => ({ ...showcase.current!, handleClick }));
   
   return useMemo(() => {
+    const
+      numRows = Math.ceil(products.length / numCols),
+      lastIndex = products.length - 1,
+      hasFocus = focus > -1,
+      focusRow = Math.floor(focus / numCols),
+      focusCol = hasFocus ? focus - (focusRow * numCols) : -1,
+      isFocusFirstCol = focusCol === 0,
+      isFocusLastCol = focusCol === numCols - 1 || focus === lastIndex,
+      isFocusAtEdge = isFocusFirstCol || isFocusLastCol,
+      isLastRowHanging = products.length < numRows * numCols;
+
     return <ul ref={showcase} {...props} className={clsx(className, css.showcase)}
     onClick={(e) => {
       if (onClick) onClick(e);
