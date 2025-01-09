@@ -19,7 +19,7 @@ header {
   @apply flex flex-wrap-reverse;
 }
 #assistant, #sub {
-  @apply w-[175px] h-[263px] transition-transform duration-[.3s] ease-out origin-bottom-left;
+  @apply w-[175px] h-[263px] transition-transform duration-[.25s] ease-out origin-bottom-left;
 }
 #assistant {
   @apply ml-[var(--assistant-left)] mt-[var(--assistant-top)];
@@ -29,8 +29,8 @@ header {
   @apply fixed left-[50%] top-[var(--assistant-top)] pointer-events-none;
   transform: var(--assistant-shift);
   &.peek {
-    transform: var(--assistant-shift) rotate(-20deg) translateX(-65px);
-    @apply duration-[2s] ease-in-out;
+    transform: var(--assistant-shift) rotate(-20deg) translateX(-70px);
+    @apply duration-[3s] ease-in-out;
   }
 }
 #greeting {
@@ -56,7 +56,7 @@ header {
   backdrop-filter: blur(5px);
 }
 .bubble.anna.showcase {
-  @apply cursor-default pt-4 pb-[16px] overflow-x-clip;
+  @apply cursor-default py-4 overflow-x-clip;
 }
 .bubble.anna.en {
   @apply pb-[11px] pr-[22px];
@@ -80,11 +80,11 @@ header {
   @apply border border-dashed border-black;
 }
 #translate-hint {
-  @apply ml-auto mr-[15px] w-fit delay-500 duration-200
+  @apply ml-auto mr-[20px] w-fit delay-500 duration-200
   text-blue-500 text-[11pt] underline cursor-pointer;
 }
 #search-bar {
-  @apply flex sticky max-w-[600px] m-[15px_auto_0] p-[0_5px] bottom-[5px];
+  @apply flex sticky max-w-[600px] m-[15px_auto_0] p-[0_20px] bottom-[5px];
 }
 #search-box {
   @apply flex-grow min-w-0 border border-gray-500 rounded-[25px] text-[13pt] p-[10px_68px_9px_35px];
@@ -92,16 +92,16 @@ header {
 .material-symbols-outlined {
   @apply absolute cursor-pointer;
   &.search {
-    @apply top-[8px] left-[13px] text-[20pt] cursor-default;
+    @apply top-[7px] left-[28px] text-[20pt] cursor-default;
   }
   &.mic {
-    @apply top-[8px] right-[5px] text-[23pt] pr-[5px] w-[40px] text-right;
+    @apply top-[7px] right-[22px] text-[23pt] pr-[5px] w-[40px] text-right;
   }
   &.send {
-    @apply top-[5px] right-[10px] text-[24pt];
+    @apply top-[4px] right-[24px] text-[24pt];
   }
   &.photo-camera {
-    @apply top-[8px] right-[50px] text-[20pt] p-[0_4px] border-[0_1px] border-solid border-gray-400;
+    @apply top-[8px] right-[65px] text-[20pt] p-[0_4px] border-[0_1px] border-solid border-gray-400;
   }
 }
 .shrink {

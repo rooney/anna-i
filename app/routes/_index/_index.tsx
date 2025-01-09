@@ -40,7 +40,7 @@ export default() => {
   if (typeof document !== 'undefined') {
     useEvent(document.body, 'scroll', () => setScrollY(document.body.scrollTop));
   }
-  useEffect(() => setSubassist(hasVScrollbar && windowWidth >= 768), [hasVScrollbar, windowWidth]);
+  useEffect(() => setSubassist(hasVScrollbar && windowWidth >= 790), [hasVScrollbar, windowWidth]);
   useEffect(() => setPeeking(isSubassist && scrollY > 265), [isSubassist, scrollY]);
   useEffect(() => setHasVScrollbar(hasScrollbarY(document.body)), [converseHeight]);
   useEffect(() => setReady(true), []);

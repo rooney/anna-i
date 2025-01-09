@@ -73,16 +73,20 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
           isFocusRow = rowIndex === focusRow,
           isHanging = isLastRow && isLastRowHanging,
           isLeading = isFirstCol && !isLastCol,
-          isTrailing = isLastCol && !isFirstCol;
+          isTrailing = isLastCol && !isFirstCol,
+          productName = product.name.replace(/ /g, '\u00A0').replace(/-/g, '\u2011');
+
         function toggleFocus(e: React.SyntheticEvent<HTMLElement>) {
           setUnfocus(focus);
           setFocus(focus === index ? -1 : index);
         }
+
         function clearOut(e: React.SyntheticEvent<HTMLElement>) {
           setUnfocus(-1);
         }
+
         return <li key={index}>
-          <figure onClick={toggleFocus} onTransitionEnd={clearOut}
+          <figure onTransitionEnd={clearOut}
             className={clsx(
               isHanging && css.hanging,
               isLeading && css.leading,
@@ -96,10 +100,9 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
                                       css.outward
               ), index === unfocus && css.inward,
             )} >
-            <img src={product.image.src}/>
-            <figcaption>
-              {product.name.replace(/ /g, '\u00A0').replace(/-/g, '\u2011')}
-            </figcaption>
+            <img src={product.image.src} onClick={toggleFocus}/>
+            <figcaption onClick={toggleFocus}>{productName}</figcaption>
+            <a>{productName}</a>
           </figure>
         </li>;
       })}

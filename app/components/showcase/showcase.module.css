@@ -21,18 +21,37 @@
     @apply trans limit-width;
     margin: 0;
     position: relative;
-  }
-  figcaption {
-    text-align: center;
-    font-size: 9pt;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    margin-bottom: 1px;
   }
   img {
     @apply trans limit-width;
     display: block;
     transform-origin: bottom center;
   }  
+  figcaption {
+    @apply ghosting;
+    text-align: center;
+    font-size: 9pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+  }
+  a {
+    @apply text-blue-600 ghosting;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-decoration: underline;
+    padding: 5px 15px 6px;
+    cursor: pointer;
+    font-weight: 500;
+    opacity: 0;
+    font-size: 10pt;
+    background-color: white;
+    border: 1px dashed black;
+    border-radius: 20px;
+  }
 }
 .leftward {
   transform: translateX(-60px);
@@ -56,17 +75,14 @@
   transform: translateY(-20px);
 }
 .downward {
-  transform: translateY(20px);
+  transform: translateY(30px);
 }
 .inward {
   z-index: 1;
 }
 .outward {
-  z-index: 2;
-  img {
-    transform: scale(2.8);
-  }
   --down: translateY(20px);
+  z-index: 2;
   transform: var(--down);
   &.leading {
     transform: var(--down) translateX(var(--x-push));
@@ -80,11 +96,24 @@
   &.trailing.hanging {
     transform: var(--down) translateX(calc(0px - (var(--x-push-hanging))));
   }
+  img {
+    transform: scale(2.8);
+    box-shadow: 0 -1px 10px black;
+  }
+  figcaption {
+    opacity: 0;
+  }
+  a {
+    opacity: 1;
+  }
 }
 .limit-width {
   max-width: 100px;
 }
 .trans {
   transition: .25s transform;
+}
+.ghosting {
+  transition: .25s opacity;
 }
 
