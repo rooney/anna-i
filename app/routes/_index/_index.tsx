@@ -150,10 +150,8 @@ export default() => {
             if ('searchResult' in chat) return (
               <div key={index} className="bubble anna showcase" onClick={(e) => showcases.current[index].handleClick(e)}>
                 <span className={lang}>
-                  {chat.searchResult.length > 1 && <>
-                    {translations[lang].formatNumber(chat.searchResult.length)}
-                    {translations[lang].nFound}
-                  </>}
+                  {translations[lang].formatNumber(chat.searchResult.length)}
+                  {translations[lang][chat.searchResult.length > 1 ? 'nFound' : 'oneFound']}
                 </span>
                 <Showcase ref={addShowcase(index)} products={chat.searchResult}/>
               </div>

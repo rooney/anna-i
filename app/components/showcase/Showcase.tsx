@@ -58,7 +58,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
       isFocusAtEdge = isFocusFirstCol || isFocusLastCol,
       isLastRowHanging = products.length < numRows * numCols;
 
-    return <ul ref={showcase} {...props} className={clsx(className, css.showcase)}
+    return <ul ref={showcase} {...props} className={clsx(className, css.showcase, products.length === 1 && css.one)}
     onClick={(e) => {
       if (onClick) onClick(e);
       if (!e.defaultPrevented) handleClick(e);

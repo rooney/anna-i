@@ -80,7 +80,7 @@ header {
   @apply border border-dashed border-black;
 }
 #translate-hint {
-  @apply ml-auto mr-[20px] w-fit delay-500 duration-200
+  @apply ml-auto mr-[45px] w-fit delay-500 duration-200
   text-blue-500 text-[11pt] underline cursor-pointer;
 }
 #search-bar {
