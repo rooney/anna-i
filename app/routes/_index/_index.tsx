@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
+import { useThrottle } from '@react-hook/throttle';
+import { useWindowWidth } from '@react-hook/window-size/throttled';
 import { type MetaFunction } from '@remix-run/node';
 import { clsx } from 'clsx';
 import { Showcase, ShowcaseHandle, Spinner } from '~/components';
@@ -6,6 +8,8 @@ import { hasScrollbarY, isDesktop, randomBetween } from '~/utils';
 import { type Language, translations } from '~/locales';
 import type { Chat, Product } from '~/models';
 import Products from '~/models/product';
+import useEvent from '@react-hook/event';
+import useSize from '@react-hook/size';
 import './_index.css';
 
 export const meta: MetaFunction = () => {
@@ -16,47 +20,31 @@ export const meta: MetaFunction = () => {
 
 export default() => {
   const
-    [ready, setReady] = useState<boolean>(false),
+    converse = useRef<HTMLElement>(null),
+    [_, converseHeight] = useSize(converse),
     [lang, setLang] = useState<Language>('jp'),
     [chats, setChats] = useState<Chat[]>([]),
     [userInput, setUserInput] = useState<string>(''),
-    [scrollTop, setScrollTop] = useState<number>(0),
-    [windowWidth, setWindowWidth] = useState<number>(typeof window === 'undefined' ? 0 : window.innerWidth),
+    [scrollY, setScrollY] = useThrottle<number>(0),
     [hasVScrollbar, setHasVScrollbar] = useState<boolean>(false),
     [isSubassist, setSubassist] = useState<boolean>(false),
     [isPeeking, setPeeking] = useState<boolean>(false),
-    converse = useRef<HTMLElement>(null),
+    [ready, setReady] = useState<boolean>(false),
+    windowWidth = useWindowWidth({fps: 1}),
     searchBox = useRef<HTMLInputElement>(null),
     showcases = useRef<ShowcaseHandle[]>([]),
     addShowcase = (index: number) => (el: ShowcaseHandle) => {
       showcases.current[index] = el!;
     };
 
+  if (typeof document !== 'undefined') {
+    useEvent(document.body, 'scroll', () => setScrollY(document.body.scrollTop));
+  }
   useEffect(() => setSubassist(hasVScrollbar && windowWidth >= 768), [hasVScrollbar, windowWidth]);
-  useEffect(() => setPeeking(isSubassist && scrollTop > 265), [isSubassist, scrollTop]);
-  useEffect(() => setHasVScrollbar(hasScrollbarY(document.body)), [chats]);
-  useEffect(() => {
-    window.addEventListener('resize', onWindowResize);
-    document.body.addEventListener('scroll', onBodyScroll);
-    setReady(true);
-    return () => {
-      window.removeEventListener('resize', onWindowResize);
-      document.body.removeEventListener('scroll', onBodyScroll);
-    }
-  }, []);
+  useEffect(() => setPeeking(isSubassist && scrollY > 265), [isSubassist, scrollY]);
+  useEffect(() => setHasVScrollbar(hasScrollbarY(document.body)), [converseHeight]);
+  useEffect(() => setReady(true), []);
 
-  let debounceOBS: NodeJS.Timeout
-  function onBodyScroll() {
-    clearTimeout(debounceOBS);
-    debounceOBS = setTimeout(() => setScrollTop(document.body.scrollTop), 100);
-  }
-  
-  let debounceOWR: NodeJS.Timeout;
-  function onWindowResize() {
-    clearTimeout(debounceOWR);
-    debounceOWR = setTimeout(() => setWindowWidth(window.innerWidth), 100);
-  }
-  
   function focusOnSearch() {
     searchBox.current?.focus();
   }

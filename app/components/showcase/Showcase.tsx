@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import { useWindowWidth } from '@react-hook/window-size/throttled';
+import useSize from '@react-hook/size';
 import { clsx } from 'clsx';
 import { type Product } from '~/models/product';
 import css from './Showcase.module.css';
@@ -18,11 +18,10 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
     [focus, setFocus] = useState<number>(-1),
     [unfocus, setUnfocus] = useState<number>(-1),
     [numCols, setNumCols] = useState<number>(1),
-    windowWidth = useWindowWidth();
+    [showcaseWidth, _] = useSize(showcase);
 
     useEffect(() => {
       const
-        showcaseWidth = Math.max(280, showcase.current!.getBoundingClientRect().width),
         numCols = Math.floor((showcaseWidth + 5) / 105),
         numColsHanging = products.length % numCols,
         usedWidth        = 105 * numCols - 5,
@@ -36,7 +35,8 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
       style.setProperty('--x-push', `${xPush}px`);
       style.setProperty('--x-push-hanging', `${xPushHanging}px`);
       setNumCols(numCols);
-    }, [windowWidth]);
+
+    }, [showcaseWidth]);
 
   function handleClick(e: React.MouseEvent<HTMLElement>) {
     const target = (e.target as HTMLElement);
