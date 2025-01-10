@@ -2,7 +2,7 @@
   @apply overflow-hidden;
   input {
     @apply min-w-0 rounded-full text-base pl-10 py-2 ml-4 mb-1 border-none mt-3;
-    width: calc(100% - 75px);
+    width: calc(100% - 73px);
     box-shadow: inset 0 0 3px black;
     &:focus {
         @apply outline-none;
