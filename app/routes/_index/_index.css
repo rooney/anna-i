@@ -56,7 +56,7 @@ header {
   backdrop-filter: blur(5px);
 }
 .bubble.anna.showcase {
-  @apply cursor-default py-4 overflow-x-clip;
+  @apply cursor-default py-4;
 }
 .bubble.anna.en {
   @apply pb-[11px] pr-[22px];
@@ -80,28 +80,35 @@ header {
   @apply border border-dashed border-black;
 }
 #translate-hint {
-  @apply ml-auto mr-[45px] w-fit delay-500 duration-200
+  @apply ml-auto mb-2 mr-6 w-fit transition-transform delay-500 duration-200
   text-blue-500 text-[11pt] underline cursor-pointer;
 }
 #search-bar {
-  @apply flex sticky max-w-[600px] m-[15px_auto_0] p-[0_20px] bottom-[5px];
+  @apply sticky bottom-1;
+  width: 100%;
 }
 #search-box {
-  @apply flex-grow min-w-0 border border-gray-500 rounded-[25px] text-[13pt] p-[10px_68px_9px_35px];
+  @apply min-w-0 rounded-full text-lg pl-10 py-1 ml-4 border-none;
+  box-shadow: inset 0 0 3px black;
+  width: calc(100% - 75px);
+  &:focus {
+    box-shadow: inset 0 0 3px 1px theme('colors.blue.500'), 0 0 0 2px theme('colors.blue.500');
+    outline: none;
+  }
 }
 .material-symbols-outlined {
   @apply absolute cursor-pointer;
   &.search {
-    @apply top-[7px] left-[28px] text-[20pt] cursor-default;
+    @apply text-[20pt] top-[5px] left-6 cursor-default;
   }
   &.mic {
-    @apply top-[7px] right-[22px] text-[23pt] pr-[5px] w-[40px] text-right;
+    @apply text-[23pt] top-[5px] right-6;
   }
   &.send {
-    @apply top-[4px] right-[24px] text-[24pt];
+    @apply text-[24pt] top-[3px] right-5;
   }
   &.photo-camera {
-    @apply top-[8px] right-[65px] text-[20pt] p-[0_4px] border-[0_1px] border-solid border-gray-400;
+    @apply text-[20pt] top-[5px] right-16 p-[0_4px] border-[0_1px] border-solid border-gray-400;
   }
 }
 .shrink {

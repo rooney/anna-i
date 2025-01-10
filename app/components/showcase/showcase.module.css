@@ -27,10 +27,11 @@
   img {
     @apply trans limit-width;
     display: block;
+    user-select: none;
     transform-origin: bottom center;
   }  
   figcaption {
-    @apply ghosting;
+    @apply trans;
     text-align: center;
     font-size: 9pt;
     text-overflow: ellipsis;
@@ -38,7 +39,7 @@
     position: relative;
   }
   a {
-    @apply text-blue-600 ghosting;
+    @apply text-blue-600 trans;
     position: absolute;
     bottom: -10px;
     left: 50%;
@@ -64,9 +65,11 @@
 }
 .leftward {
   transform: translateX(-60px);
+  &.leading {opacity:0; &.hanging {opacity:1;}}
 }
 .rightward {
   transform: translateX(60px);
+  &.trailing {opacity:0; &.hanging {opacity:1;}}
 }
 .leftward.edge {
   transform: translateX(calc(-25px - (var(--x-push))));
@@ -105,9 +108,13 @@
   &.trailing.hanging {
     transform: var(--down) translateX(calc(0px - (var(--x-push-hanging))));
   }
+  &.portrait img {
+    transform: scale(2.1);
+  }
   img {
     transform: scale(2.8);
     box-shadow: 0 -1px 10px black;
+    background-color: white;
   }
   figcaption {
     opacity: 0;
@@ -120,9 +127,6 @@
   max-width: 100px;
 }
 .trans {
-  transition: .25s transform;
+  transition: .25s;
+  transition-property: transform opacity;
 }
-.ghosting {
-  transition: .25s opacity;
-}
-

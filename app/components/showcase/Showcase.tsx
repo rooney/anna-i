@@ -74,6 +74,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
           isHanging = isLastRow && isLastRowHanging,
           isLeading = isFirstCol && !isLastCol,
           isTrailing = isLastCol && !isFirstCol,
+          isPortrait = product.image.height > product.image.width,
           productName = product.name.replace(/ /g, '\u00A0').replace(/-/g, '\u2011');
 
         function toggleFocus(e: React.SyntheticEvent<HTMLElement>) {
@@ -88,6 +89,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
         return <li key={index}>
           <figure onTransitionEnd={clearOut}
             className={clsx(
+              isPortrait && css.portrait,
               isHanging && css.hanging,
               isLeading && css.leading,
               isTrailing && css.trailing,
