@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, use
 import useSize from '@react-hook/size';
 import { clsx } from 'clsx';
 import { type Product } from '~/models/product';
-import css from './Showcase.module.css';
+import css from './showcase.module.css';
 
 interface ShowcaseProps extends React.HTMLAttributes<HTMLUListElement> {
   products: Product[],
