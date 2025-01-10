@@ -87,7 +87,7 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
         }
 
         return <li key={index}>
-          <figure onTransitionEnd={clearOut}
+          <figure onClick={toggleFocus} onTransitionEnd={clearOut}
             className={clsx(
               isPortrait && css.portrait,
               isHanging && css.hanging,
@@ -102,8 +102,8 @@ export const Showcase = forwardRef<ShowcaseHandle, ShowcaseProps>(({products, on
                                       css.outward
               ), index === unfocus && css.inward,
             )} >
-            <img src={product.image.src} onClick={toggleFocus}/>
-            <figcaption onClick={toggleFocus}>{productName}</figcaption>
+            <img src={product.image.src}/>
+            <figcaption>{productName}</figcaption>
             <a>{productName}</a>
           </figure>
         </li>;

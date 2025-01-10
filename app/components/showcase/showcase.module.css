@@ -4,59 +4,31 @@
   @media(max-width: 355px) {
     --x-push: 52px;
   }
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 5px;
-  justify-content: center;
-  align-items: end;
-  margin-block-start: 16px;
-  padding: 0;
-  min-width: 280px;
+  @apply p-0 flex flex-row flex-wrap justify-center items-end gap-[5px] min-w-[280px];
   li {
-    display: block;
-    width: fit-content;
-    height: fit-content;
+    @apply block w-fit h-fit
+  }
+  figure, img {
+    @apply max-w-[100px];
   }
   figure {
-    @apply trans limit-width;
-    margin: 0;
-    position: relative;
-    margin-bottom: 1px;
+    @apply trans relative m-0 mb-[1px];
   }
   img {
-    @apply trans limit-width;
-    display: block;
-    user-select: none;
-    transform-origin: bottom center;
+    @apply trans block select-none origin-bottom;
   }  
   figcaption {
-    @apply trans;
-    text-align: center;
-    font-size: 9pt;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    position: relative;
+    @apply trans relative text-[9pt] text-center text-ellipsis overflow-hidden;
   }
   a {
-    @apply text-blue-600 trans;
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
+    @apply trans absolute bottom-0 left-[50%] p-[5px_15px_6px] cursor-pointer
+      text-[10pt] text-blue-600 font-medium underline bg-white opacity-0 invisible
+      border-[1px] border-dashed border-black rounded-full;
     transform: translateX(-50%);
-    text-decoration: underline;
-    padding: 5px 15px 6px;
-    cursor: pointer;
-    font-weight: 500;
-    opacity: 0;
-    font-size: 10pt;
-    background-color: white;
-    border: 1px dashed black;
-    border-radius: 20px;
   }
   &.one {
     figure, img {
-      max-width: 200px;
+      @apply max-w-[200px];
     }
     figure.outward > img {
       transform: scale(1.4)
@@ -65,11 +37,11 @@
 }
 .leftward {
   transform: translateX(-60px);
-  &.leading {opacity:0; &.hanging {opacity:1;}}
+  &.leading {@apply opacity-0; &.hanging {@apply opacity-100;}}
 }
 .rightward {
   transform: translateX(60px);
-  &.trailing {opacity:0; &.hanging {opacity:1;}}
+  &.trailing {@apply opacity-0; &.hanging {@apply opacity-100;}}
 }
 .leftward.edge {
   transform: translateX(calc(-25px - (var(--x-push))));
@@ -93,8 +65,8 @@
   z-index: 1;
 }
 .outward {
-  --down: translateY(20px);
   z-index: 2;
+  --down: translateY(45px);
   transform: var(--down);
   &.leading {
     transform: var(--down) translateX(var(--x-push));
@@ -112,21 +84,18 @@
     transform: scale(2.1);
   }
   img {
-    transform: scale(2.8);
+    @apply bg-white;
     box-shadow: 0 -1px 10px black;
-    background-color: white;
+    transform: scale(2.8);
   }
   figcaption {
-    opacity: 0;
+    @apply opacity-0;
   }
   a {
-    opacity: 1;
+    @apply opacity-100 visible;
   }
 }
-.limit-width {
-  max-width: 100px;
-}
 .trans {
-  transition: .25s;
   transition-property: transform opacity;
+  transition: .25s;
 }
