@@ -25,7 +25,7 @@ export default() => {
     [lang, setLang] = useState<Language>('jp'),
     [chats, setChats] = useState<Chat[]>([]),
     [userInput, setUserInput] = useState<string>(''),
-    [scrollY, setScrollY] = useThrottle<number>(0),
+    [scrollY, setScrollY] = useThrottle<number>(283),
     [hasVScrollbar, setHasVScrollbar] = useState<boolean>(false),
     [isSubassist, setSubassist] = useState<boolean>(false),
     [isPeeking, setPeeking] = useState<boolean>(false),
@@ -38,10 +38,10 @@ export default() => {
     };
 
   if (typeof document !== 'undefined') {
-    useEvent(document.body, 'scroll', () => setScrollY(document.body.scrollTop));
+    useEvent(document.body, 'scroll', () => setScrollY(converse.current!.getBoundingClientRect().top));
   }
   useEffect(() => setSubassist(hasVScrollbar && windowWidth >= 790), [hasVScrollbar, windowWidth]);
-  useEffect(() => setPeeking(isSubassist && scrollY > 265), [isSubassist, scrollY]);
+  useEffect(() => setPeeking(isSubassist && scrollY < 50), [isSubassist, scrollY]);
   useEffect(() => setHasVScrollbar(hasScrollbarY(document.body)), [converseHeight]);
   useEffect(() => setReady(true), []);
 
@@ -150,8 +150,12 @@ export default() => {
             if ('searchResult' in chat) return (
               <div key={index} className="bubble anna showcase" onClick={(e) => showcases.current[index].handleClick(e)}>
                 <span className={lang}>
-                  {translations[lang].formatNumber(chat.searchResult.length)}
-                  {translations[lang][chat.searchResult.length > 1 ? 'nFound' : 'oneFound']}
+                  {chat.searchResult.length > 1 ? <>
+                    {translations[lang].formatNumber(chat.searchResult.length)}
+                    {translations[lang].nFound}
+                  </> : <>
+                    {translations[lang].oneFound}
+                  </>}
                 </span>
                 <Showcase ref={addShowcase(index)} products={chat.searchResult}/>
               </div>

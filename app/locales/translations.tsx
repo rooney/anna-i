@@ -7,7 +7,7 @@ export const translations = {
     </>,
     searchHint: 'Product name',
     nFound: ' products found',
-    oneFound: ' product found',
+    oneFound: 'Found 1 product',
     noneFound: "Sorry, I couldn't find it",
     error: "I'm sorry, the service is currently unavailable",
 
@@ -21,7 +21,7 @@ export const translations = {
     </>,
     searchHint: '製品名',
     nFound: <>件の商品が&#8203;見つかりました</>,
-    oneFound: <>件の商品が見つかりました</>,
+    oneFound: <>1 件の商品が見つかりました</>,
     noneFound: <>申し訳ありませんが、見つかりません&#8203;でした</>,
     error: <>申し訳ございませんが、現在&#8203;サービス&#8203;は&#8203;ご利用&#8203;いただけません</>,
 

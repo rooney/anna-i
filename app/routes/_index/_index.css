@@ -84,30 +84,30 @@ header {
   text-blue-500 text-[11pt] underline cursor-pointer;
 }
 #search-bar {
-  @apply sticky bottom-1 w-full;
+  @apply sticky bottom-1 w-full overflow-hidden;
 }
 #search-box {
-  @apply min-w-0 rounded-full text-lg pl-10 py-1 ml-4 border-none mt-3;
+  @apply min-w-0 rounded-full text-base pl-10 py-2 ml-4 mb-1 border-none mt-3;
   width: calc(100% - 75px);
   box-shadow: inset 0 0 3px black;
   &:focus {
     @apply outline-none;
-    box-shadow: inset 0 0 3px 1px theme('colors.blue.500'), 0 0 0 1px theme('colors.blue.600');
+    box-shadow: inset 0 0 3px 1px theme('colors.blue.500'), 0 0 0 1px theme('colors.blue.500');
   }
 }
 .material-symbols-outlined {
   @apply absolute cursor-pointer;
   &.search {
-    @apply text-[20pt] top-[17px] left-6 cursor-default;
-  }
-  &.mic {
-    @apply text-[23pt] top-[17px] right-6;
+    @apply text-[20pt] top-[19px] left-6 cursor-default;
   }
   &.send {
-    @apply text-[24pt] top-[14px] right-5;
+    @apply text-[24pt] top-[15px] right-5;
+  }
+  &.mic {
+    @apply text-[23pt] top-[19px] right-6;
   }
   &.photo-camera {
-    @apply text-[20pt] top-[17px] right-16 p-[0_4px] border-[0_1px] border-solid border-gray-400;
+    @apply text-[20pt] top-[19px] right-14 p-[0_4px] border-[0_1px] border-solid border-gray-400;
   }
 }
 .shrink {

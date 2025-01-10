@@ -1,1 +1,1 @@
-export { default } from './_index';
+export { default, meta } from './_index';
