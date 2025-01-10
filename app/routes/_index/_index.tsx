@@ -157,7 +157,17 @@ export default() => {
                     {translations[lang].oneFound}
                   </>}
                 </span>
-                <Showcase ref={addShowcase(index)} products={chat.searchResult}/>
+                <Showcase ref={addShowcase(index)} products={chat.searchResult} style={{
+                  maxWidth: (() => {
+                    const
+                      showcaseWidth = windowWidth - 56,
+                      numProducts = chat.searchResult.length,
+                      numCols = Math.floor(showcaseWidth / 105),
+                      numRows = Math.ceil(numProducts / numCols),
+                      optCols = Math.ceil(numProducts / numRows);
+                    return optCols * 105;
+                  })(),
+                }}/>
               </div>
             );
 
