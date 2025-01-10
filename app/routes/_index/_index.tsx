@@ -3,7 +3,7 @@ import { useThrottle } from '@react-hook/throttle';
 import { useWindowWidth } from '@react-hook/window-size/throttled';
 import { type MetaFunction } from '@remix-run/node';
 import { clsx } from 'clsx';
-import { Showcase, ShowcaseHandle, Spinner } from '~/components';
+import { SearchBar, Showcase, ShowcaseElement, Spinner } from '~/components';
 import { hasScrollbarY, isDesktop, randomBetween } from '~/utils';
 import { type Language, translations } from '~/locales';
 import type { Chat, Product } from '~/models';
@@ -31,9 +31,9 @@ export default() => {
     [isPeeking, setPeeking] = useState<boolean>(false),
     [ready, setReady] = useState<boolean>(false),
     windowWidth = useWindowWidth({fps: 1}),
-    searchBox = useRef<HTMLInputElement>(null),
-    showcases = useRef<ShowcaseHandle[]>([]),
-    addShowcase = (index: number) => (el: ShowcaseHandle) => {
+    searchBar = useRef<HTMLInputElement>(null),
+    showcases = useRef<ShowcaseElement[]>([]),
+    addShowcase = (index: number) => (el: ShowcaseElement) => {
       showcases.current[index] = el!;
     };
 
@@ -46,7 +46,7 @@ export default() => {
   useEffect(() => setReady(true), []);
 
   function focusOnSearch() {
-    searchBox.current?.focus();
+    searchBar.current?.focus();
   }
 
   function scrollIntoLatest() {
@@ -178,14 +178,7 @@ export default() => {
             );            
           })}
         </section>
-        <form id="search-bar" onSubmit={submit}>
-          <input id="search-box" ref={searchBox} onInput={e => setUserInput((e.target as HTMLInputElement).value)}
-            type="text" autoComplete="off" value={userInput} placeholder={translations[lang].searchHint}/>
-          <span className="material-symbols-outlined search" onClick={focusOnSearch}>&#xe8b6;</span>
-          <span className={userInput ? 'material-symbols-outlined send' : 'hidden'} onClick={submit}>&#xe163;</span>
-          <span className={userInput ? 'hidden' : 'material-symbols-outlined mic'}>&#xe029;</span>
-          <span className={userInput ? 'hidden' : 'material-symbols-outlined photo-camera'}>&#xe412;</span>
-        </form>
+        <SearchBar ref={searchBar} id="search-bar" placeholderText={translations[lang].searchHint} onSearch={send}/>
       </main>
     </>
   );

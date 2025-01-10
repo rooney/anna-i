@@ -1,2 +1,3 @@
-export * from './spinner';
+export * from './searchbar';
 export * from './showcase';
+export * from './spinner';

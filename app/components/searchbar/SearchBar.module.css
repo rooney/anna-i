@@ -1,0 +1,27 @@
+.searchbar {
+  @apply overflow-hidden;
+  input {
+    @apply min-w-0 rounded-full text-base pl-10 py-2 ml-4 mb-1 border-none mt-3;
+    width: calc(100% - 75px);
+    box-shadow: inset 0 0 3px black;
+    &:focus {
+        @apply outline-none;
+        box-shadow: inset 0 0 3px 1px theme('colors.blue.500'), 0 0 0 1px theme('colors.blue.500');
+    }
+  }
+}
+.icon {
+  @apply absolute cursor-pointer select-none;
+}
+.search {
+  @apply icon text-[20pt] top-[19px] left-6 cursor-default;
+}
+.send {
+  @apply icon text-[24pt] top-[15px] right-5;
+}
+.mic {
+  @apply icon text-[23pt] top-[19px] right-6;
+}
+.camera {
+  @apply icon text-[20pt] top-[19px] right-14 p-[0_4px] border-[0_1px] border-solid border-gray-400;
+}
